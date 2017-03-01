@@ -50,8 +50,8 @@ struct Resources {
 struct Check {
   1: required string Type
   2: required string Name
-  3: required i64 Interval = 10000000000
-  4: required i64 Timeout = 2000000000
+  3: required i64 Interval
+  4: required i64 Timeout
   5: optional string Path
   6: optional string Protocol
   7: optional string Command
@@ -130,4 +130,4 @@ struct NomadJob {
   2: optional bool Diff
 }
 
-
+const i64 SECOND = 1000000000

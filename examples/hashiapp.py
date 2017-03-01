@@ -2,6 +2,7 @@ from copy import deepcopy
 import os
 
 from nomad.jobspec.ttypes import *
+from nomad.jobspec.constants import *
 from nomad.util import *
 
 VAULT_TOKEN=os.environ.get('VAULT_TOKEN', '')
@@ -20,7 +21,7 @@ job=Job(
     Datacenters=['dc1'],
     Region="global",
     Type="service",
-    Update=Update(MaxParallel=1, Stagger=3 * 10000000000),
+    Update=Update(MaxParallel=1, Stagger=30 * SECOND),
     TaskGroups=[]
 )
 tg=TaskGroup(
@@ -66,8 +67,8 @@ task=Task(
             Checks=[
                 Check(
                     Type="http",
-                    Interval=10 * 1000000000,
-                    Timeout=2 * 1000000000,
+                    Interval=10 * SECOND,
+                    Timeout=2 * SECOND,
                     Path='/healthz'
                 )
             ]
