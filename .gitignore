@@ -1,0 +1,4 @@
+nomad/jobspec
+dist
+build
+*.pyc
