@@ -42,11 +42,6 @@ task=Task(
         'VAULT_ADDR': VAULT_ADDR
     },
     LogConfig=LogConfig(),
-
-    Vault=Vault(
-        Policies=["hashiapp"],
-    ),
-
     Resources=Resources(
         CPU=50,
         MemoryMB=128,
@@ -63,11 +58,10 @@ task=Task(
     ),
     Services=[
         Service(
-            Name="http",
+            Name="hashiapp",
             PortLabel="http",
             Tags=[
                 "urlprefix-hashiapp.coupl.in/",
-                # "urlprefix-nomad-c1.coupl.in/",
             ],
             Checks=[
                 Check(
