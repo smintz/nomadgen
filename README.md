@@ -5,17 +5,27 @@ Still under development.
 
 Contribute:
 
- # Clone the repo
- # Install the thrift compiler
-  sudo apt-get install thrift-compiler
- # Install requirements
+ 1. Clone the repo
+ 1. Install the thrift compiler
+```
+sudo apt-get install thrift-compiler
+```
+ 1. Install requirements
+```
   sudo pip install -r requirements.txt
- # Build and install locally
+```
+ 1. Build and install locally
+```
   make
- # Run the examples/hashiapp.py to validate output
+```
+ 1. Run the examples/hashiapp.py to validate output
+```
   VAULT_TOKEN="<a vault token>" python examples/hashiapp.py
- # Run examples/hashiapp.py against nomad agent to run it
+```
+ 1. Run examples/hashiapp.py against nomad agent to run it
+```
   VAULT_TOKEN="<a vault token>" python examples/hashiapp.py --run
 
+```
 
 License: MIT
