@@ -22,25 +22,28 @@ def writeToJSON(obj):
 def jobToJSON(job):
     return writeToJSON(job).replace('"Args":', '"args":')
 
+def validate_json_output(text):
+    try:
+        j=json.loads(text)
+        print(json.dumps(j, indent=2))
+        return True
+    except:
+        print(result.text)
+        return False
+
 def export_if_last(job):
-    payload=jobToJSON(NomadJob(Job=job))
 
-    print(jobToJSON(NomadJob(Job=job, Diff='true')))
-
+    # Show the diff
     result=requests.post(
         "http://localhost:4646/v1/job/" + job.ID + "/plan",
         data=jobToJSON(NomadJob(Job=job, Diff=True))
     )
 
-    print(result.text)
-    j=json.loads(result.text)
-    print(json.dumps(j, indent=2))
+    if not (validate_json_output(result.text)):
+        return
     cont = raw_input("Continue?")
     if cont in ["y", "Y"]:
+        payload=jobToJSON(NomadJob(Job=job))
         result=requests.post("http://localhost:4646/v1/job/" + job.ID, data=payload)
-        try:
-            j=json.loads(result.text)
-            print(json.dumps(j, indent=2))
-        except:
-            print(result.text)
+        validate_json_output(result.text)
 
