@@ -25,7 +25,6 @@ sudo apt-get install thrift-compiler
  1. Run examples/hashiapp.py against nomad agent to run it
 ```
   VAULT_TOKEN="<a vault token>" python examples/hashiapp.py --run
-
 ```
 
 License: MIT

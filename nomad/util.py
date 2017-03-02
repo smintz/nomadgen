@@ -29,7 +29,7 @@ def validate_json_output(text):
         print(json.dumps(j, indent=2))
         return True
     except:
-        print(result.text)
+        print(text)
         return False
 
 def cmdline():
