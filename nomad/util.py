@@ -1,5 +1,6 @@
 from thrift.transport.TTransport import TMemoryBuffer
 from thrift.protocol.TJSONProtocol import TSimpleJSONProtocol
+from thrift.Thrift import TType
 from jobspec.ttypes import NomadJob
 
 import requests
@@ -7,8 +8,15 @@ import json
 import argparse
 class NomadJSONProtocol(TSimpleJSONProtocol):
 
-# This will make writeBool writing a json compatible boolean instead of 1/0
+    def writeFieldBegin(self, name, ttype, fid):
+        # "args" is a reseved word in thrift and therefore cannot be used as a field name.
+        # There is a miss-match between the exec config args (lowercase) and the healthcheck command "Args" (capitalised)
+        if name == "Args" and ttype == TType.LIST:
+            name="args"
+        self.writeJSONString(name)
+
     def writeBool(self, boolean):
+        # This will make writeBool writing a json compatible boolean instead of 1/0
         s="false"
         if boolean:
             s="true"
@@ -21,7 +29,7 @@ def writeToJSON(obj):
   return trans.getvalue()
 
 def jobToJSON(job):
-    return writeToJSON(job).replace('"Args":', '"args":')
+    return writeToJSON(job)
 
 def validate_json_output(text):
     try:
