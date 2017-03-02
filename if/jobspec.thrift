@@ -74,8 +74,10 @@ struct Template {
 struct Config {
   1: optional string image
   2: optional string command
-  3: optional map<string,i32> port_map
+  3: optional list<map<string,string>> port_map
   4: optional list<string> Args
+  5: optional string image_path
+  6: optional string accelerator
 }
 struct Vault {
   1: required list<string> Policies

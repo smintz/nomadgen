@@ -2,6 +2,11 @@ from nomad.jobspec.ttypes import *
 from nomad.jobspec.constants import *
 from nomad.util import export_if_last
 
+import os
+
+VAULT_TOKEN=os.environ.get('VAULT_TOKEN', None)
+VAULT_ADDR=os.environ.get('VAULT_ADDR', 'http://127.0.0.1:8200')
+
 PACKAGE=Artifact(
     GetterSource="https://github.com/eBay/fabio/releases/download/v1.3.8/fabio-1.3.8-go1.7.5-linux_amd64"
 )
@@ -22,9 +27,17 @@ tg=TaskGroup(
 )
 task=Task(
     Name='fabio',
-    Driver='exec',
+    Driver='raw_exec',
     Config=Config(
-        command="fabio-1.3.8-go1.7.5-linux_amd64"
+        command="fabio-1.3.8-go1.7.5-linux_amd64",
+    ),
+    Env={
+        'FABIO_proxy_cs': 'cs=prodcert;type=vault;cert=secret/fabio/cert',
+        'FABIO_proxy_addr': ':80,:443;cs=prodcert',
+        'VAULT_ADDR': VAULT_ADDR
+    },
+    Vault=Vault(
+        Policies=['fabio']
     ),
     Artifacts=[
         PACKAGE,
@@ -39,7 +52,7 @@ task=Task(
                 ReservedPorts=[
                     Port(
                         Label="http",
-                        Value=9999
+                        Value=443
                     ),
                     Port(
                         Label="config",

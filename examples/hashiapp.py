@@ -5,7 +5,6 @@ from nomad.jobspec.ttypes import *
 from nomad.jobspec.constants import *
 from nomad.util import *
 
-VAULT_TOKEN=os.environ.get('VAULT_TOKEN', None)
 VAULT_ADDR=os.environ.get('VAULT_ADDR', 'http://127.0.0.1:8200')
 
 PACKAGE=Artifact(
@@ -39,9 +38,12 @@ task=Task(
         PACKAGE,
     ],
     Env={
-        'VAULT_TOKEN': VAULT_TOKEN,
         'VAULT_ADDR': VAULT_ADDR
     },
+    Vault=Vault(
+        Policies=['hashiapp']
+
+    ),
     LogConfig=LogConfig(),
     Resources=Resources(
         CPU=50,
