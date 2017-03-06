@@ -2,10 +2,10 @@ from nomad.jobspec.ttypes import Resources, Port, Network
 
 class CommonResources(Resources):
 
-    def __init__(self, cpu=500, memory=256):
+    def __init__(self, cpu=50, memory=128):
         Resources.__init__(self)
         self.CPU=cpu
-        self.MemoryMB=256
+        self.MemoryMB=memory
         self.Networks=[
             Network(
                 MBits=1,

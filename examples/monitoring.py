@@ -64,7 +64,7 @@ prometheus_task=Task(
         )
     ],
     LogConfig=LogConfig(),
-    Resources=CommonResources(cpu=50, memory=128).setPort("http"),
+    Resources=CommonResources().setPort("http"),
     Services=[
         Service(
             Name="prometheus",
@@ -99,7 +99,7 @@ grafana_task=Task(
         port_map = [{"http": "3000"}]
     ),
     LogConfig=LogConfig(),
-    Resources=CommonResources(cpu=50, memory=128).setPort("http"),
+    Resources=CommonResources().setPort("http"),
     Services=[
         Service(
             Name="grafana",

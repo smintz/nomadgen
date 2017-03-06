@@ -27,7 +27,7 @@ task=Task(
     ),
     LogConfig=LogConfig(),
     Artifacts=[],
-    Resources=CommonResources().setPort("db"),
+    Resources=CommonResources(cpu=500, memory=512).setPort("db"),
     Services=[
         Service(
             Name="global-redis-check",
