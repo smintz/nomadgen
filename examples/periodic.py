@@ -27,7 +27,7 @@ task=Task(
     Driver='exec',
     Config=Config(
         command="echo",
-        Args=["hello", "world"]
+        command_args=["hello", "world"]
     ),
     LogConfig=LogConfig(),
     Resources=Resources(

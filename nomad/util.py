@@ -10,8 +10,8 @@ class NomadJSONProtocol(TSimpleJSONProtocol):
 
     def writeFieldBegin(self, name, ttype, fid):
         # "args" is a reseved word in thrift and therefore cannot be used as a field name.
-        # There is a miss-match between the exec config args (lowercase) and the healthcheck command "Args" (capitalised)
-        if name == "Args" and ttype == TType.LIST:
+        # There is a miss-match between the exec config args (lowercase) and the healthcheck command "command_args" (capitalised)
+        if name == "command_args" and ttype == TType.LIST:
             name="args"
         self.writeJSONString(name)
 

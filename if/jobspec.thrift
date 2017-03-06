@@ -75,7 +75,7 @@ struct Config {
   1: optional string image
   2: optional string command
   3: optional list<map<string,string>> port_map
-  4: optional list<string> Args
+  4: optional list<string> command_args
   5: optional string image_path
   6: optional string accelerator
 }

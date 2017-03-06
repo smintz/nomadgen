@@ -51,7 +51,7 @@ prometheus_task=Task(
     Driver='exec',
     Config=Config(
         command='prometheus-1.5.2.linux-amd64/prometheus',
-        Args=[
+        command_args=[
             "-config.file", "config.yml",
             "-web.listen-address=:${NOMAD_PORT_http}"
         ]
