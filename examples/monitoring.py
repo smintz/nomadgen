@@ -4,7 +4,7 @@ from nomad.util import *
 import os
 
 BASE_DOMAIN=os.environ.get('BASE_DOMAIN', 'domain.local')
-
+PROMETHEUS_VERSION='1.5.2'
 PROMETHEUS_CONFIG="""
 global:
   scrape_interval:     15s
@@ -22,16 +22,12 @@ scrape_configs:
     - server: 'localhost:8500'
 """
 PROMETHEUS_TAR=Artifact(
-    GetterSource="https://github.com/prometheus/prometheus/releases/download/v1.5.2/prometheus-1.5.2.linux-amd64.tar.gz",
+    GetterSource="https://github.com/prometheus/prometheus/releases/download/v{PROMETHEUS_VERSION}/prometheus-{PROMETHEUS_VERSION}.linux-amd64.tar.gz".format(**locals()),
 )
 GRAFANA_CONFIG="""
 [server]
 http_port={{env "NOMAD_PORT_http"}}
 """
-GRAFANA_VERSION='4.1.2-1486989747'
-GRAFANA_TAR=Artifact(
-    GetterSource="https://grafanarel.s3.amazonaws.com/builds/grafana-%s.linux-x64.tar.gz" % GRAFANA_VERSION,
-)
 job=Job(
     Name='monitoring',
     ID='monitoring',
@@ -50,7 +46,7 @@ prometheus_task=Task(
     Name='prometheus',
     Driver='exec',
     Config=Config(
-        command='prometheus-1.5.2.linux-amd64/prometheus',
+        command='prometheus-{}.linux-amd64/prometheus'.format(PROMETHEUS_VERSION),
         command_args=[
             "-config.file", "config.yml",
             "-web.listen-address=:${NOMAD_PORT_http}"
