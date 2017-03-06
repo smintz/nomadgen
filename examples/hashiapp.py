@@ -5,6 +5,8 @@ from nomad.jobspec.ttypes import *
 from nomad.jobspec.constants import *
 from nomad.util import *
 
+from common.resources import CommonResources
+
 VAULT_ADDR=os.environ.get('VAULT_ADDR', 'http://127.0.0.1:8200')
 HASHIAPP_HOST=os.environ.get('HASHIAPP_HOST', 'hashiapp.com')
 
@@ -46,20 +48,7 @@ task=Task(
 
     ),
     LogConfig=LogConfig(),
-    Resources=Resources(
-        CPU=50,
-        MemoryMB=128,
-        Networks=[
-            Network(
-                MBits=1,
-                DynamicPorts=[
-                    Port(
-                        Label="http"
-                    )
-                ]
-            )
-        ]
-    ),
+    Resources=CommonResources(cpu=50, memory=128).setPort("http"),
     Services=[
         Service(
             Name="hashiapp",

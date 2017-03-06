@@ -2,6 +2,8 @@ from nomad.jobspec.ttypes import *
 from nomad.jobspec.constants import *
 from nomad.util import export_if_last
 
+from common.resources import CommonResources
+
 import os
 
 VAULT_TOKEN=os.environ.get('VAULT_TOKEN', None)
@@ -44,29 +46,7 @@ task=Task(
         PACKAGE,
     ],
     LogConfig=LogConfig(),
-    Resources=Resources(
-        CPU=50,
-        MemoryMB=128,
-        Networks=[
-            Network(
-                MBits=1,
-                ReservedPorts=[
-                    Port(
-                        Label="http",
-                        Value=80
-                    ),
-                    Port(
-                        Label="https",
-                        Value=443
-                    ),
-                    Port(
-                        Label="config",
-                        Value=9998
-                    )
-                ]
-            )
-        ]
-    ),
+    Resources=CommonResources(cpu=50, memory=128).setPort("http", 80).setPort("https", 443).setPort("config", 9998),
     Services=[
         Service(
             Name="fabio",

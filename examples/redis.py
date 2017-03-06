@@ -1,6 +1,7 @@
 from nomad.jobspec.ttypes import *
 from nomad.jobspec.constants import *
 from nomad.util import export_if_last
+from common.resources import CommonResources
 
 from copy import deepcopy
 job=Job(
@@ -26,20 +27,7 @@ task=Task(
     ),
     LogConfig=LogConfig(),
     Artifacts=[],
-    Resources=Resources(
-        CPU=500,
-        MemoryMB=256,
-        Networks=[
-            Network(
-                MBits=1,
-                DynamicPorts=[
-                    Port(
-                        Label="db",
-                    ),
-                ]
-            )
-        ]
-    ),
+    Resources=CommonResources().setPort("db"),
     Services=[
         Service(
             Name="global-redis-check",

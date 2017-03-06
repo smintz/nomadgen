@@ -1,6 +1,7 @@
 from nomad.jobspec.ttypes import *
 from nomad.jobspec.constants import *
 from nomad.util import *
+from common.resources import CommonResources
 import os
 
 BASE_DOMAIN=os.environ.get('BASE_DOMAIN', 'domain.local')
@@ -63,20 +64,7 @@ prometheus_task=Task(
         )
     ],
     LogConfig=LogConfig(),
-    Resources=Resources(
-        CPU=50,
-        MemoryMB=128,
-        Networks=[
-            Network(
-                MBits=1,
-                DynamicPorts=[
-                    Port(
-                        Label="http"
-                    )
-                ]
-            )
-        ]
-    ),
+    Resources=CommonResources(cpu=50, memory=128).setPort("http"),
     Services=[
         Service(
             Name="prometheus",
@@ -111,20 +99,7 @@ grafana_task=Task(
         port_map = [{"http": "3000"}]
     ),
     LogConfig=LogConfig(),
-    Resources=Resources(
-        CPU=50,
-        MemoryMB=128,
-        Networks=[
-            Network(
-                MBits=1,
-                DynamicPorts=[
-                    Port(
-                        Label="http"
-                    )
-                ]
-            )
-        ]
-    ),
+    Resources=CommonResources(cpu=50, memory=128).setPort("http"),
     Services=[
         Service(
             Name="grafana",
