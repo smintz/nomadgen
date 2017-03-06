@@ -8,6 +8,11 @@ Still under development.
 
 Nomad is a great job/task scheduler but HCL is pretty limited. This tool will allow you to easily create job specs in python. Its heavily inspired by Facebook's [configerator](http://muratbuffalo.blogspot.co.il/2016/02/holistic-configuration-management-at.html).
 
+### Install and run
+ 1. `pip install nomadgen`
+ 2. See JSON output: `python jobspec.py`
+ 3. Apply to Nomad: `python jobspec.py --run`
+
 ### Examples
 
  * [Redis](https://github.com/smintz/nomadgen/blob/master/examples/redis.py) - See how to use same basic task spec config with different drivers (Docker, rkt, qemu).

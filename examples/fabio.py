@@ -37,6 +37,7 @@ task=Task(
     Env={
         'FABIO_proxy_cs': 'cs=prodcert;type=vault;cert=secret/fabio/cert',
         'FABIO_proxy_addr': ':${NOMAD_PORT_http},:${NOMAD_PORT_https};cs=prodcert',
+        'FABIO_ui_addr': ':${NOMAD_PORT_config}',
         'VAULT_ADDR': VAULT_ADDR
     },
     Vault=Vault(
@@ -49,7 +50,7 @@ task=Task(
     Resources=CommonResources() \
         .setPort("http", 80) \
         .setPort("https", 443) \
-        .setPort("config", 9998),
+        .setPort("config"),
     Services=[
         Service(
             Name="fabio",
