@@ -1,9 +1,21 @@
 # nomadgen
 
+Craft your [Hashicorp's Nomad](https://nomadproject.io) job specs in python.
+
 Still under development.
 
+### Motivation
 
-Contribute:
+Nomad is a great job/task scheduler but HCL is pretty limited. This tool will allow you to easily create job specs in python. Its heavily inspired by Facebook's [configerator](http://muratbuffalo.blogspot.co.il/2016/02/holistic-configuration-management-at.html).
+
+### Examples
+
+ * [Redis](https://github.com/smintz/nomadgen/blob/master/examples/redis.py) - See how to use same basic task spec config with different drivers (Docker, rkt, qemu).
+ * [Hashiapp](https://github.com/smintz/nomadgen/blob/master/examples/hashiapp.py) - Blue/Green deployments made easy.
+ * [periodic](https://github.com/smintz/nomadgen/blob/master/examples/periodic.py) - Periodic task example.
+ * [common/resources](https://github.com/smintz/nomadgen/blob/master/examples/common/resources.py) - How to simplfy your API even better.
+
+## Contribute:
 
  1. Clone the repo
  1. Install the thrift compiler
