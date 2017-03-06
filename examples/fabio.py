@@ -6,6 +6,7 @@ import os
 
 VAULT_TOKEN=os.environ.get('VAULT_TOKEN', None)
 VAULT_ADDR=os.environ.get('VAULT_ADDR', 'http://127.0.0.1:8200')
+FABIO_HOST=os.environ.get('FABIO_HOST', 'fabio.local')
 
 PACKAGE=Artifact(
     GetterSource="https://github.com/eBay/fabio/releases/download/v1.3.8/fabio-1.3.8-go1.7.5-linux_amd64"
@@ -52,6 +53,10 @@ task=Task(
                 ReservedPorts=[
                     Port(
                         Label="http",
+                        Value=80
+                    ),
+                    Port(
+                        Label="https",
                         Value=443
                     ),
                     Port(
@@ -64,9 +69,9 @@ task=Task(
     ),
     Services=[
         Service(
-            Name="http",
+            Name="fabio",
             PortLabel="config",
-            Tags=[ "http", "frontend" ],
+            Tags=[ "http", "frontend", "urlprefix-{}/".format(FABIO_HOST)],
             Checks=[
                 Check(
                     Type="http",

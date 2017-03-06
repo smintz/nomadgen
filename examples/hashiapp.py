@@ -6,6 +6,7 @@ from nomad.jobspec.constants import *
 from nomad.util import *
 
 VAULT_ADDR=os.environ.get('VAULT_ADDR', 'http://127.0.0.1:8200')
+HASHIAPP_HOST=os.environ.get('HASHIAPP_HOST', 'hashiapp.com')
 
 PACKAGE=Artifact(
     GetterSource="https://storage.googleapis.com/hashistack/hashiapp/v1.0.0/hashiapp",
@@ -64,7 +65,7 @@ task=Task(
             Name="hashiapp",
             PortLabel="http",
             Tags=[
-                "urlprefix-hashiapp.coupl.in/",
+                "urlprefix-{}/".format(HASHIAPP_HOST),
             ],
             Checks=[
                 Check(
