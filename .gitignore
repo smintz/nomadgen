@@ -1,4 +1,4 @@
-nomad/jobspec
+nomadgen/jobspec
 dist
 build
 *.pyc

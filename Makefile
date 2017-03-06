@@ -1,7 +1,7 @@
 all: thrift_gen install
 
 thrift_gen:
-	thrift --gen py -out nomad if/jobspec.thrift
+	thrift --gen py -out nomadgen if/jobspec.thrift
 
 install:
 	sudo python setup.py install

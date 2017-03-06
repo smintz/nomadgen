@@ -2,7 +2,7 @@ from distutils.core import setup
 VERSION='0.0.1'
 setup(
     name = 'nomadgen',
-    packages = ['nomad', 'nomad/jobspec'],
+    packages = ['nomadgen', 'nomadgen/jobspec'],
     version = VERSION,
     description = "Configuration util in python syntax for Hashicorp's Nomad",
     license = 'MIT',

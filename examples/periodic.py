@@ -1,6 +1,6 @@
-from nomad.jobspec.ttypes import *
-from nomad.jobspec.constants import *
-from nomad.util import export_if_last
+from nomadgen.jobspec.ttypes import *
+from nomadgen.jobspec.constants import *
+from nomadgen.util import export_if_last
 
 job=Job(
     Name='periodic',
