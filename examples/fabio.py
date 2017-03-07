@@ -38,6 +38,7 @@ task=Task(
         'FABIO_proxy_cs': 'cs=prodcert;type=vault;cert=secret/fabio/cert',
         'FABIO_proxy_addr': ':${NOMAD_PORT_http},:${NOMAD_PORT_https};cs=prodcert',
         'FABIO_ui_addr': ':${NOMAD_PORT_config}',
+        'FABIO_registry_consul_register_addr': ':${NOMAD_PORT_config}',
         'VAULT_ADDR': VAULT_ADDR
     },
     Vault=Vault(
@@ -61,7 +62,7 @@ task=Task(
                     Type="http",
                     Interval=10 * SECOND,
                     Timeout=2 * SECOND,
-                    Path='/'
+                    Path='/health'
                 )
             ]
         )

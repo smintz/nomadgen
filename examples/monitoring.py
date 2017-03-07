@@ -77,7 +77,7 @@ prometheus_task=Task(
                     Type="http",
                     Interval=10 * SECOND,
                     Timeout=2 * SECOND,
-                    Path='/'
+                    Path='/metrics'
                 )
             ]
         )
