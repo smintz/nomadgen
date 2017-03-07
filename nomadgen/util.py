@@ -7,12 +7,13 @@ import requests
 import json
 import argparse
 class NomadJSONProtocol(TSimpleJSONProtocol):
+    FIELD_NAMES_TRANSLATIONS={
+        # "args" is a reseved word in thrift and therefore cannot be used as a field name.
+        "command_args": "args",
+    }
 
     def writeFieldBegin(self, name, ttype, fid):
-        # "args" is a reseved word in thrift and therefore cannot be used as a field name.
-        # There is a miss-match between the exec config args (lowercase) and the healthcheck command "command_args" (capitalised)
-        if name == "command_args" and ttype == TType.LIST:
-            name="args"
+        name = self.FIELD_NAMES_TRANSLATIONS.get(name, name)
         self.writeJSONString(name)
 
     def writeBool(self, boolean):
