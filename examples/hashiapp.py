@@ -9,12 +9,19 @@ from common.resources import CommonResources
 
 VAULT_ADDR=os.environ.get('VAULT_ADDR', 'http://127.0.0.1:8200')
 HASHIAPP_HOST=os.environ.get('HASHIAPP_HOST', 'hashiapp.com')
+DB_HOST=os.environ.get('DB_HOST', '127.0.0.1')
 
-PACKAGE=Artifact(
-    GetterSource="https://storage.googleapis.com/hashistack/hashiapp/v1.0.0/hashiapp",
-    GetterOptions={
-        "checksum": "sha256:d2127dd0356241819e4db5407284a6d100d800ebbf37b4b2b8e9aefc97f48636"
-    }
+GREEN_VERSION='1.0.0'
+BLUE_VERSION='2.0.0'
+
+GREEN_WORKERS=1
+BLUE_WORKERS=1
+
+BLUE_PACKAGE=Artifact(
+    GetterSource="https://storage.googleapis.com/hashistack/hashiapp/v{}/hashiapp".format(BLUE_VERSION),
+)
+GREEN_PACKAGE=Artifact(
+    GetterSource="https://storage.googleapis.com/hashistack/hashiapp/v{}/hashiapp".format(GREEN_VERSION),
 )
 
 job=Job(
@@ -27,8 +34,8 @@ job=Job(
     TaskGroups=[]
 )
 tg=TaskGroup(
-    Name="servers",
-    Count=5,
+    Name="temp",
+    Count=0,
     Tasks=[]
 )
 task=Task(
@@ -38,10 +45,11 @@ task=Task(
         command='hashiapp',
     ),
     Artifacts=[
-        PACKAGE,
+        BLUE_PACKAGE,
     ],
     Env={
-        'VAULT_ADDR': VAULT_ADDR
+        'VAULT_ADDR': VAULT_ADDR,
+        'HASHIAPP_DB_HOST': DB_HOST,
     },
     Vault=Vault(
         Policies=['hashiapp']
@@ -67,15 +75,19 @@ task=Task(
         )
     ],
 )
-tg1=deepcopy(tg)
-tg.Name='blue'
-tg.Count=1
-tg1.Name='green'
-tg1.Count=1
-task1=deepcopy(task)
-tg.Tasks.append(task)
-tg1.Tasks.append(task1)
+green_tg=deepcopy(tg)
+green_tg.Name='green'
+green_tg.Count=GREEN_WORKERS
+green_task=deepcopy(task)
+green_task.Artifacts=[GREEN_PACKAGE]
+green_tg.Tasks.append(green_task)
+job.TaskGroups.append(green_tg)
 
-job.TaskGroups.append(tg)
-job.TaskGroups.append(tg1)
+blue_tg=deepcopy(tg)
+blue_tg.Name='blue'
+blue_tg.Count=BLUE_WORKERS
+blue_task=deepcopy(task)
+blue_task.Artifacts=[BLUE_PACKAGE]
+blue_tg.Tasks.append(blue_task)
+job.TaskGroups.append(blue_tg)
 export_if_last(job)
