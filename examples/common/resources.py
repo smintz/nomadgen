@@ -1,4 +1,4 @@
-from nomad.jobspec.ttypes import Resources, Port, Network
+from nomadgen.jobspec.ttypes import Resources, Port, Network
 
 class CommonResources(Resources):
 
