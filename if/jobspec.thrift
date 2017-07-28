@@ -9,6 +9,11 @@ struct ParamaterizedJob {}
 struct Update {
   1: optional i64 MaxParallel
   2: optional i64 Stagger
+  3: optional string HealthCheck
+  4: optional i64 MinHealthyTime
+  5: optional i64 HealthyDeadline
+  6: optional bool AutoRevert
+  7: optional i64 Canary
 }
 struct Periodic {
   1: optional bool Enabled
@@ -102,6 +107,11 @@ struct Task {
   14: optional string User
   15: optional Vault Vault
 }
+struct EphemeralDisk {
+  1: required i32 SizeMB
+  2: optional bool Sticky = 0
+  3: optional bool Migrate = 0
+}
 struct TaskGroup {
   1: optional list<Constraint> Constraints
   2: optional i64 Count
@@ -109,6 +119,7 @@ struct TaskGroup {
   4: required string Name
   5: optional RestartPolicy RestartPolicy
   6: optional list<Task> Tasks
+  7: optional EphemeralDisk EphemeralDisk
 }
 struct Job {
   1: optional bool AllAtOnce

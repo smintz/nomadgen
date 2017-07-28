@@ -1,5 +1,5 @@
 from distutils.core import setup
-VERSION='0.0.2'
+VERSION='0.0.3'
 setup(
     name = 'nomadgen',
     packages = ['nomadgen', 'nomadgen/jobspec'],
@@ -12,4 +12,8 @@ setup(
     download_url = 'https://github.com/smintz/nomadgen/archive/%s.tar.gz' % VERSION,
     keywords = ['nomad', 'hcl', 'hashicorp'],
     classifiers = [],
+    requires = [
+        'requests',
+        'thrift',
+    ]
 )
