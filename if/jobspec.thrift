@@ -83,6 +83,30 @@ struct Config {
   4: optional list<string> command_args
   5: optional string image_path
   6: optional string accelerator
+  7: optional list<string> volumes
+  8: optional list<string> dns_search_domains
+  9: optional list<string> dns_servers
+  10: optional list<string> extra_hosts
+  11: optional string hostname
+  12: optional bool interactive
+  13: optional string ipc_mode
+  14: optional string ipv4_address
+  15: optional string ipv6_address
+  16: optional map<string,string> labels
+  17: optional list<string> load
+  // TODO: Add logging
+  18: optional string mac_address
+  19: optional list<string> network_aliases
+  20: optional string network_mode
+  21: optional string pid_mode
+  22: optional bool privileged
+  23: optional list<string> security_opt
+  24: optional i64 shm_size
+  25: optional bool tty
+  26: optional string uts_mode
+  27: optional string userns_mode
+  28: optional string volume_driver
+  29: optional string work_dir
 }
 struct Vault {
   1: required list<string> Policies
