@@ -1,4 +1,5 @@
 nomadgen/jobspec
+nomadgen.egg-info
 dist
 build
 *.pyc
