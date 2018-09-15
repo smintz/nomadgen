@@ -5,7 +5,7 @@ setup(
     packages = [
         'nomadgen',
         'nomadgen.jobspec',
-        'nomadgen.common',
+        'nomadgen.api',
     ],
     version = VERSION,
     description = "Configuration util in python syntax for Hashicorp's Nomad",

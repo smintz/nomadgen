@@ -8,5 +8,5 @@ thrift_gen:
 	thrift1 --gen py -out nomadgen if/jobspec.thrift
 
 pex: deps
-	rm -f ~/.pex/build/nomadgen*
+	rm -rf ~/.pex/build/nomadgen* ~/.pex/install/nomadgen*
 	pex -v --no-pypi -r pex-requirements.txt -o ~/.local/bin/nomadgen.pex ./ ~/.local/lib/python2.7/site-packages/thrift/
