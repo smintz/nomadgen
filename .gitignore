@@ -3,3 +3,4 @@ nomadgen.egg-info
 dist
 build
 *.pyc
+pip-selfcheck.json
