@@ -1,10 +1,8 @@
-all: thrift_gen install
+all: thrift_gen pex
 
 thrift_gen:
-	thrift --gen py -out nomadgen if/jobspec.thrift
+	python nomadgen/import_golang_to_thrift.py > if/jobspec.thrift
+	thrift1 --gen py -out nomadgen if/jobspec.thrift
 
-install:
-	sudo python setup.py install
-
-test: all
-	python examples/hashiapp.py
+pex:
+	pex -r pex-requirements.txt -D . -o ~/.local/bin/nomadgen.pex

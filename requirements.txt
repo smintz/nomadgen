@@ -1,2 +1,8 @@
 requests==2.13.0
-thrift==0.10.0
+six==1.11.0
+asyncio
+git+https://github.com/facebook/fbthrift.git#egg=Thrift&subdirectory=thrift/lib/py
+click==6.7
+future
+typing
+pex
