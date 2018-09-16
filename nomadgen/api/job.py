@@ -12,11 +12,13 @@ class NGJob(Job):
         self.ID=id
         self.Datacenters=dc
         self.Region=region
+        if not type in ["service", "system", "batch"]:
+            raise ValueError("type must be on of `service`, `system` or `batch`")
         self.Type=type
         self.TaskGroups=[]
         self.Constraints=[]
 
-    def addTaskGroup(self, name="servers", workers=3):
+    def addTaskGroup(self, name="servers", workers=1, canaries=0):
         tg = TaskGroup(
             Name=name,
             Count=workers,
@@ -27,7 +29,7 @@ class NGJob(Job):
                 MaxParallel=1,
                 Stagger=3 * SECOND,
                 HealthyDeadline=300 * SECOND,
-                Canary=1,
+                Canary=canaries,
             )
         self.TaskGroups.append(tg)
 
@@ -39,15 +41,24 @@ class NGJob(Job):
         else:
             return self.TaskGroups.index(arr[0])
 
-    def addTask(self, task, group="servers"):
+    def addTask(self, task, group="servers", workers=None, canaries=None):
         assert isinstance(task, Task)
         index = self.getIndexOrCreateTaskGroup(group)
         self.TaskGroups[index].Tasks.append(task)
+        if workers:
+            self.setWorkersCount(workers, group=group)
+        if canaries:
+            self.setCanaries(canaries, group=group)
         return self
 
     def setWorkersCount(self, num, group="servers"):
         index = self.getIndexOrCreateTaskGroup(group)
         self.TaskGroups[index].Count = num
+        return self
+
+    def setCanaries(self, num, group="servers"):
+        index = self.getIndexOrCreateTaskGroup(group)
+        self.TaskGroups[index].Update.Canary = num
         return self
 
     def setEphemeralDisk(self, disk, group="servers"):
