@@ -4,7 +4,31 @@ set -e
 WORKDIR=/tmp/fb
 mkdir -p $WORKDIR
 FB_TAG='2018.09.10.00'
-sudo apt-get install -y -qq cmake libboost1.65-all-dev bison flex libgflags-dev libgoogle-glog-dev libdouble-conversion-dev libevent-dev libsodium-dev libkrb5-dev
+sudo apt-get install -y -qq \
+  binutils-dev \
+  bison \
+  cmake \
+  curl \
+  flex \
+  g++ \
+  git \
+  libboost-all-dev \
+  libdouble-conversion-dev \
+  libevent-dev \
+  libgflags-dev \
+  libgoogle-glog-dev \
+  libiberty-dev \
+  libjemalloc-dev \
+  libkrb5-dev \
+  liblz4-dev \
+  liblzma-dev \
+  libsnappy-dev \
+  libsodium-dev \
+  libssl-dev \
+  make \
+  pkg-config \
+  python-pip \
+  zlib1g-dev
 
 #https://github.com/no1msd/mstch
 cd $WORKDIR
