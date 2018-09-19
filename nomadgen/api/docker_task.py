@@ -13,7 +13,7 @@ class DockerTask(NGTask):
             port_map=[]
         )
 
-    def setDockerAuth(username, password):
+    def setDockerAuth(self, username, password):
         self.Config.auth=[
             DockerDriverAuth(
                 username=username,
