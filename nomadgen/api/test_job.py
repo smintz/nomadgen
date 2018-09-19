@@ -1,11 +1,18 @@
 import unittest
 
 from nomadgen.api import Job, DockerTask
+from nomadgen.jobspec.ttypes import EphemeralDisk
 
 class JobTestCase(unittest.TestCase):
 
     def setUp(self):
+        self.job=Job('hello')
+        self.task=DockerTask("helloworld","hashicorp/http-echo")
+        self.job.addTask(self.task)
         pass
+
+    def getTaskGroup(self, group="servers"):
+        return self.job.TaskGroups[self.job.getIndexOrCreateTaskGroup(group)]
 
     def test_create_minimal_job(self):
         job=Job('hello')
@@ -36,6 +43,37 @@ class JobTestCase(unittest.TestCase):
         self.assertEqual(len(job.TaskGroups), 1)
         tg=job.TaskGroups[0]
         self.assertEqual(tg.Name, "servers")
+        new_group_name="myname"
+        job.addTask(task, new_group_name)
+        tg2 = job.TaskGroups[job.getIndexOrCreateTaskGroup(new_group_name)]
+        self.assertEqual(tg2.Name, new_group_name)
+
+    def test_set_workers_count(self):
+        self.job.setWorkersCount(7)
+        self.assertEqual(self.getTaskGroup().Count, 7)
+
+    def test_set_canries(self):
+        self.job.setCanaries(7)
+        self.assertEqual(self.getTaskGroup().Update.Canary, 7)
+
+    def test_set_ephemeral_disk(self):
+        with self.assertRaises(AssertionError):
+            self.job.setEphemeralDisk("hello")
+        disk=EphemeralDisk(SizeMB=300)
+        self.job.setEphemeralDisk(disk)
+        tg=self.getTaskGroup()
+        self.assertEqual(tg.EphemeralDisk, disk)
+
+    def test_constraints(self):
+        self.job.distinctHosts()
+        self.assertEqual(self.job.Constraints[0].Operand, "distinct_hosts")
+        self.assertEqual(self.job.Constraints[0].RTarget, "true")
+        self.job.Constraints=[]
+        self.job.addConstraint("a", "b")
+        self.assertEqual(self.job.Constraints[0].Operand, "=")
+        self.assertEqual(self.job.Constraints[0].RTarget, "b")
+        self.assertEqual(self.job.Constraints[0].LTarget, "a")
+
 
 if __name__ == '__main__':
     unittest.main()
