@@ -1,5 +1,5 @@
 from nomadgen.jobspec.ttypes import (
-    Job, TaskGroup, Task, UpdateStrategy, Constraint,
+    Job, TaskGroup, Task, UpdateStrategy, Constraint, EphemeralDisk
 )
 from nomadgen.api.time import SECOND
 
@@ -67,17 +67,31 @@ class NGJob(Job):
         self.TaskGroups[index].EphemeralDisk = disk
         return self
 
-    def tierConstraint(self, tiers=['shared']):
+    def buildConstraint(self, attr=None, operator='=', value=None):
+        assert(operator in [
+            '=', '!=', '>', '>=', '<', '<=', 'distinct_hosts',
+            'distinct_property', 'regexp', 'set_contains', 'version'
+        ])
         return Constraint(
-            LTarget='${meta.tier}',
-            Operand='regexp',
-            RTarget='(%s)' % '|'.join(tiers)
+            LTarget=attr,
+            Operand=operator,
+            RTarget=value
         )
 
-    def setTiers(self, tiers=['shared']):
-        tier_constraint = self.tierConstraint(tiers)
-        if len(self.Constraints) > 0:
-            self.Constraints[0] = tier_constraint
+    def addConstraint(self, arg1, arg2=None):
+        if arg2:
+            constraint=self.buildConstraint(
+                attr=arg1,
+                value=arg2,
+            )
         else:
-            self.Constraints.append(tier_constraint)
+            constraint=arg1
+        assert(isinstance(constraint, Constraint))
+        self.Constraints.append(constraint)
+        return self
+
+    def distinctHosts(self, flag=True):
+        self.addConstraint(
+            self.buildConstraint(operator="distinct_hosts", value=str(flag).lower())
+        )
         return self
