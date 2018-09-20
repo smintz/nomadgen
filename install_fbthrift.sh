@@ -4,7 +4,7 @@ set -e
 WORKDIR=/tmp/fb
 mkdir -p $WORKDIR
 FB_TAG='2018.09.10.00'
-sudo apt-get install -y -qq \
+sudo apt-get install --no-install-recommends -y -qq \
   binutils-dev \
   bison \
   cmake \
@@ -63,3 +63,6 @@ cmake -Dcompiler_only=ON .
 make -j $(nproc)
 sudo make install 
 popd
+
+rm -rvf $WORKDIR
+rm -rf /var/lib/apt/lists/*
