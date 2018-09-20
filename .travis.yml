@@ -6,7 +6,7 @@ services:
   - docker
 
 before_install:
-  - docker run -v /home/travis/build/smintz/nomadgen:/work smintz/nomadgen-builder /bin/bash -c "cd /work; pip install setuptools && make deps && make"
+  - docker pull smintz/nomadgen-builder
 
 script:
-  - make
+  - docker run -v /home/travis/build/smintz/nomadgen:/work smintz/nomadgen-builder /bin/bash -c "cd /work; pip install setuptools && make deps && make"
