@@ -9,4 +9,4 @@ before_install:
   - docker pull smintz/nomadgen-builder
 
 script:
-  - docker run -v /home/travis/build/smintz/nomadgen:/work smintz/nomadgen-builder /bin/bash -c "cd /work; pip install setuptools && make deps && make"
+  - docker run --privileged -v /home/travis/build/smintz/nomadgen:/work smintz/nomadgen-builder /bin/bash -c "cd /work; pip install setuptools && make deps && make"
