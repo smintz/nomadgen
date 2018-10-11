@@ -211,8 +211,18 @@ struct Service {
   4: optional string Name
   5: optional list<string> Tags
 }
-struct DispatchPayloadConfig {
-  1: optional string File
+struct Resources {
+  1: optional i16 MemoryMB
+  2: optional i16 IOPS
+  3: optional i16 DiskMB
+  4: optional i16 CPU
+  5: optional list<NetworkResource> Networks
+}
+struct TaskArtifact {
+  1: optional string RelativeDest
+  2: optional string GetterSource
+  3: optional map<string,string> GetterOptions
+  4: optional string GetterMode
 }
 struct Template {
   1: optional bool Envvars
@@ -227,24 +237,14 @@ struct Template {
   10: optional string ChangeSignal
   11: optional string EmbeddedTmpl
 }
-struct Resources {
-  1: optional i16 MemoryMB
-  2: optional i16 IOPS
-  3: optional i16 DiskMB
-  4: optional i16 CPU
-  5: optional list<NetworkResource> Networks
+struct DispatchPayloadConfig {
+  1: optional string File
 }
 struct Vault {
   1: optional string ChangeSignal
   2: optional string ChangeMode
   3: optional bool Env
   4: optional list<string> Policies
-}
-struct TaskArtifact {
-  1: optional string RelativeDest
-  2: optional string GetterSource
-  3: optional map<string,string> GetterOptions
-  4: optional string GetterMode
 }
 struct LogConfig {
   1: optional i16 MaxFiles
@@ -277,12 +277,6 @@ struct MigrateStrategy {
   2: optional string HealthCheck
   3: optional i64 HealthyDeadline
   4: optional i64 MinHealthyTime
-}
-struct RestartPolicy {
-  1: optional i64 Delay
-  2: optional i16 Attempts
-  3: optional i64 Interval
-  4: optional string Mode
 }
 struct Task {
   1: optional list<Template> Templates
@@ -319,10 +313,42 @@ struct TaskDiff {
   4: optional string Name
   5: optional list<string> Annotations
 }
+struct TaskEvent {
+  1: optional string DisplayMessage
+  2: optional string TaskSignal
+  3: optional i64 KillTimeout
+  4: optional string VaultError
+  5: optional map<string,string> Details
+  6: optional string TaskSignalReason
+  7: optional string Type
+  8: optional i64 DiskLimit
+  9: optional string DriverError
+  10: optional string KillReason
+  11: optional bool FailsTask
+  12: optional string FailedSibling
+  13: optional string ValidationError
+  14: optional i16 Signal
+  15: optional string KillError
+  16: optional string DownloadError
+  17: optional i64 Time
+  18: optional string RestartReason
+  19: optional string DriverMessage
+  20: optional i64 StartDelay
+  21: optional string GenericSource
+  22: optional string SetupError
+  23: optional string Message
+  24: optional i16 ExitCode
+}
 struct EphemeralDisk {
   1: optional i16 SizeMB
   2: optional bool Migrate
   3: optional bool Sticky
+}
+struct RestartPolicy {
+  1: optional i64 Delay
+  2: optional i16 Attempts
+  3: optional i64 Interval
+  4: optional string Mode
 }
 struct AllocMetric {
   1: optional list<string> QuotaExhausted
@@ -338,6 +364,14 @@ struct AllocMetric {
   11: optional i16 NodesEvaluated
   12: optional map<string,i16> NodesAvailable
 }
+struct TaskGroupDiff {
+  1: optional list<TaskDiff> Tasks
+  2: optional string Name
+  3: optional list<FieldDiff> Fields
+  4: optional list<ObjectDiff> Objects
+  5: optional map<string,i64> Updates
+  6: optional string Type
+}
 struct TaskGroup {
   1: optional i16 Count
   2: optional list<Task> Tasks
@@ -350,14 +384,6 @@ struct TaskGroup {
   9: optional map<string,string> Meta
   10: optional list<Constraint> Constraints
 }
-struct TaskGroupDiff {
-  1: optional list<TaskDiff> Tasks
-  2: optional string Name
-  3: optional list<FieldDiff> Fields
-  4: optional list<ObjectDiff> Objects
-  5: optional map<string,i64> Updates
-  6: optional string Type
-}
 struct PeriodicConfig {
   1: optional bool Enabled
   2: optional i64 location
@@ -365,6 +391,19 @@ struct PeriodicConfig {
   4: optional string TimeZone
   5: optional string Spec
   6: optional bool ProhibitOverlap
+}
+struct AllocDeploymentStatus {
+  1: optional bool Healthy
+  2: optional i64 ModifyIndex
+}
+struct TaskState {
+  1: optional string LastRestart
+  2: optional i64 Restarts
+  3: optional bool Failed
+  4: optional string State
+  5: optional string FinishedAt
+  6: optional string StartedAt
+  7: optional list<TaskEvent> Events
 }
 struct DeploymentState {
   1: optional bool AutoRevert
@@ -390,12 +429,25 @@ struct ParameterizedJobConfig {
   2: optional string Payload
   3: optional list<string> MetaOptional
 }
-struct JobDiff {
-  1: optional list<FieldDiff> Fields
-  2: optional list<ObjectDiff> Objects
-  3: optional string Type
-  4: optional string ID
-  5: optional list<TaskGroupDiff> TaskGroups
+struct AllocListStub {
+  1: optional i64 CreateIndex
+  2: optional string FollowupEvalID
+  3: optional AllocDeploymentStatus DeploymentStatus
+  4: optional i64 JobVersion
+  5: optional map<string,TaskState> TaskStates
+  6: optional string NodeID
+  7: optional string DesiredDescription
+  8: optional string JobID
+  9: optional string ClientDescription
+  10: optional i64 CreateTime
+  11: optional i64 ModifyTime
+  12: optional string ClientStatus
+  13: optional i64 ModifyIndex
+  14: optional string DesiredStatus
+  15: optional string EvalID
+  16: optional string TaskGroup
+  17: optional string ID
+  18: optional string Name
 }
 struct Evaluation {
   1: optional string PreviousEval
@@ -425,6 +477,13 @@ struct Evaluation {
   25: optional string BlockedEval
   26: optional string DeploymentID
   27: optional i64 NodeModifyIndex
+}
+struct JobDiff {
+  1: optional list<FieldDiff> Fields
+  2: optional list<ObjectDiff> Objects
+  3: optional string Type
+  4: optional string ID
+  5: optional list<TaskGroupDiff> TaskGroups
 }
 struct Job {
   1: optional string Namespace
@@ -470,12 +529,6 @@ struct Deployment {
 struct PlanAnnotations {
   1: optional map<string,DesiredUpdates> DesiredTGUpdates
 }
-struct JobRegisterRequest {
-  1: optional bool PolicyOverride
-  2: optional Job Job
-  3: optional i64 JobModifyIndex
-  4: optional bool EnforceIndex
-}
 struct JobPlanResponse {
   1: optional i64 Index
   2: optional string NextPeriodicLaunch
@@ -485,20 +538,6 @@ struct JobPlanResponse {
   6: optional JobDiff Diff
   7: optional map<string,AllocMetric> FailedTGAllocs
   8: optional PlanAnnotations Annotations
-}
-struct DeploymentPromoteRequest {
-  1: optional string DeploymentID
-  2: optional bool All
-  3: optional list<string> Groups
-}
-struct JobRegisterResponse {
-  1: optional i64 Index
-  2: optional string Warnings
-  3: optional i64 JobModifyIndex
-  4: optional i64 LastContact
-  5: optional i64 EvalCreateIndex
-  6: optional bool KnownLeader
-  7: optional string EvalID
 }
 struct JobPlanRequest {
   1: optional bool PolicyOverride
@@ -518,6 +557,32 @@ struct QueryMeta {
   1: optional i64 Index
   2: optional bool KnownLeader
   3: optional i64 LastContact
+}
+struct DeploymentPromoteRequest {
+  1: optional string DeploymentID
+  2: optional bool All
+  3: optional list<string> Groups
+}
+struct JobRegisterResponse {
+  1: optional i64 Index
+  2: optional string Warnings
+  3: optional i64 JobModifyIndex
+  4: optional i64 LastContact
+  5: optional i64 EvalCreateIndex
+  6: optional bool KnownLeader
+  7: optional string EvalID
+}
+struct JobAllocationsResponse {
+  1: optional i64 Index
+  2: optional bool KnownLeader
+  3: optional list<AllocListStub> Allocations
+  4: optional i64 LastContact
+}
+struct JobRegisterRequest {
+  1: optional bool PolicyOverride
+  2: optional Job Job
+  3: optional i64 JobModifyIndex
+  4: optional bool EnforceIndex
 }
 struct JobDeregisterResponse {
   1: optional i64 Index
