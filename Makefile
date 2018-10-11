@@ -8,6 +8,7 @@ thrift_gen:
 	thrift1 --gen py:json -out nomadgen if/jobspec.thrift
 
 test:
+	pip install -r dev-requirements.txt
 	PYTHONPATH=. python -m unittest discover
 
 pex: deps test
