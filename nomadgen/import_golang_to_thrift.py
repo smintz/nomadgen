@@ -211,6 +211,7 @@ if __name__ == "__main__":
             'WriteMeta',
             'DeploymentListResponse',
             'DeploymentPromoteRequest',
+            'JobAllocationsResponse',
             'JobPlanRequest',
             'JobPlanResponse',
             'JobDeregisterResponse',

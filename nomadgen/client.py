@@ -6,6 +6,7 @@ from time import sleep
 from nomadgen.helpers import validate_json_output, jobToJSON, fromJson, writeToJSON
 
 from nomadgen.jobspec.ttypes import (
+    JobAllocationsResponse,
     JobPlanRequest,
     JobPlanResponse,
     JobDeregisterResponse,
@@ -93,7 +94,7 @@ class NomadgenAPI(object):
         )
         validate_json_output(result.text)
 
-    def get_running_deployments(self, index=0):
+    def get_deployments(self, index=0):
         sleep(1)
         result=self.get(
             "/v1/job/" + self.job.ID + "/deployments",
@@ -102,7 +103,10 @@ class NomadgenAPI(object):
 
         # This endpoints returns []Deployments which cannot be parsed by thrift
         ds = {"Deployments": json.loads(result.text)}
-        d = fromJson(json.dumps(ds), DeploymentListResponse())
+        return fromJson(json.dumps(ds), DeploymentListResponse())
+
+    def get_running_deployments(self, index=0):
+        d=self.get_deployments(index)
         return [deployment for deployment in d.Deployments if deployment.Status == 'running']
 
     def wait(self, index=0, promote=False):
@@ -110,12 +114,17 @@ class NomadgenAPI(object):
         running_deployments=self.get_running_deployments(index)
         while len(running_deployments) > 0:
             cd = running_deployments[0]
-            awaiting_promotion = [ds for tg, ds in cd.TaskGroups.iteritems() if ds.DesiredCanaries == len(ds.PlacedCanaries) == ds.HealthyAllocs]
+            awaiting_promotion = [ds for tg, ds in cd.TaskGroups.iteritems() if ds.DesiredCanaries > 0 and ds.DesiredCanaries == len(ds.PlacedCanaries) == ds.HealthyAllocs]
             click.echo("%d task groups awaiting promotion" % len(awaiting_promotion))
             click.echo(awaiting_promotion)
             if promote and len(awaiting_promotion) == len(cd.TaskGroups):
                 self.promote(cd)
             running_deployments=self.get_running_deployments(cd.ModifyIndex)
+
+    def get_allocations(self):
+        result=self.get('/v1/job/' + self.job.ID + '/allocations')
+        _my = json.dumps({'Allocations': json.loads(result.text)})
+        return fromJson(_my, JobAllocationsResponse())
 
 
     # HTTP Methods
