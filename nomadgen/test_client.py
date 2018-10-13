@@ -10,7 +10,11 @@ from dns import resolver
 
 from nomadgen.api import Job, ExecTask, SECOND
 from nomadgen.client import NomadgenAPI
+from nomadgen.consul_client import ConsulAPI
 from nomadgen.jobspec.ttypes import ServiceCheck, TaskArtifact
+
+from nomadgen.nomad_meta import NOMAD_VERSION
+from nomadgen.consul_meta import CONSUL_VERSION
 
 
 def download(binary, version):
@@ -45,21 +49,16 @@ def get_random_job():
     job.Datacenters=['dc1']
     job.setWorkersCount(1)
     task=ExecTask(r)
-    # task.Artifacts.append(TaskArtifact(
-    #     GetterSource='https://github.com/rif/spark/releases/download/v1.6.0/spark_1.6.0_linux_amd64.tar.gz'
-    # ))
-    # task.Config.command="${NOMAD_TASK_DIR}/spark"
-    # task.Config.command_args="-port=${NOMAD_PORT_http} 'Hello World!'"
     task.Config.command="python"
     task.Config.command_args="-m SimpleHTTPServer ${NOMAD_PORT_http}".split()
-    task.addService(r, port_label='http', checks=[http_check], port=8787)
+    task.addService(r, port_label='http', checks=[http_check])
     job.addTask(task)
     return job
 
 class ClientTest(unittest.TestCase):
     def setUp(self):
-        nomad = download('nomad', '0.8.3')
-        consul = download('consul', '1.2.2')
+        nomad = download('nomad', NOMAD_VERSION)
+        consul = download('consul', CONSUL_VERSION)
         self.consul_proc=subprocess.Popen([consul, 'agent', '-dev'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         sleep(1)
         self.nomad_proc=subprocess.Popen([nomad, 'agent', '-dev'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -98,9 +97,13 @@ class ClientTest(unittest.TestCase):
 
         # Validate service is registered with consul
         self.consul_resolver.query(job.ID + '.service.consul', 'SRV')
+        consul = ConsulAPI()
+        answer = consul.get_service(job.ID)
+        self.assertEqual(len(answer.ServiceNodes), 1)
 
         # Validate task is answering
-        urllib2.urlopen('http://127.0.0.1:8787').read()
+        urllib2.urlopen('http://127.0.0.1:%d' % answer.ServiceNodes[0].ServicePort).read()
+
 
 if __name__ == '__main__':
     unittest.main()
