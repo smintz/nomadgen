@@ -12,5 +12,6 @@ install:
   - pip install --upgrade pycodestyle
 
 script:
-  - docker run --privileged -v /home/travis/build/smintz/nomadgen:/work smintz/nomadgen-builder /bin/bash -c "cd /work; pip install setuptools && make deps && make"
+  - docker run --privileged -v /home/travis/build/smintz/nomadgen:/work smintz/nomadgen-builder /bin/bash -c "cd /work; pip install setuptools && make deps && make test"
   - pycodestyle --exclude=constants.py,ttypes.py nomadgen
+  - docker run --privileged -v /home/travis/build/smintz/nomadgen:/work smintz/nomadgen-builder /bin/bash -c "cd /work; pip install setuptools && make deps && make pex"
