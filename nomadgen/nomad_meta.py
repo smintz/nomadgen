@@ -1,8 +1,8 @@
 from nomadgen.struct_parser import StructParser
-NOMAD_VERSION='0.8.3'
+NOMAD_VERSION = '0.8.3'
 
 if __name__ == "__main__":
-    drivers=StructParser(
+    drivers = StructParser(
         version='v' + NOMAD_VERSION,
         file_paths=[
             '/client/driver/docker.go',
@@ -19,10 +19,12 @@ if __name__ == "__main__":
             'RktDriverConfig',
         ])
     drivers.print_all()
-    print(drivers.build_struct('DriverConfig', drivers.driver_config_struct['DriverConfig']))
+    print(
+        drivers.build_struct(
+            'DriverConfig', drivers.driver_config_struct['DriverConfig']))
     StructParser(
         version='v' + NOMAD_VERSION,
-        override_field={'Task':{'Config':'DriverConfig'}},
+        override_field={'Task': {'Config': 'DriverConfig'}},
         file_paths=[
             '/nomad/structs/structs.go',
             '/nomad/structs/diff.go',

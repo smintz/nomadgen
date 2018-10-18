@@ -1,29 +1,30 @@
 from nomadgen.jobspec.ttypes import (
-    Task, Vault, LogConfig, Service, Template
+    Task, LogConfig, Service, Template
 )
 from nomadgen.api.resources import CommonResources
-from nomadgen.api.time import SECOND
-import os
+
 
 class NGTask(Task):
-    def __init__(self, name, image=None, change_mode='noop', install_certs=False,
-                 force_pull_image=False):
+    def __init__(self, name, image=None, change_mode='noop',
+                 install_certs=False, force_pull_image=False):
         Task.__init__(self)
-        self.Name=name
-        self.image=image
+        self.Name = name
+        self.image = image
         self.force_pull_image = force_pull_image
-        self.change_mode=change_mode
+        self.change_mode = change_mode
         self.setTaskDriver()
-        self.Artifacts=[]
-        self.LogConfig=LogConfig()
-        self.Resources=CommonResources()
-        self.Services=[]
-        self.Templates=[]
+        self.Artifacts = []
+        self.LogConfig = LogConfig()
+        self.Resources = CommonResources()
+        self.Services = []
+        self.Templates = []
 
     def setTaskDriver(self):
         raise NotImplementedError()
 
-    def addService(self, name, tags=[], checks=[], port=None, map_to=None, port_label=None):
+    def addService(
+            self, name, tags=[], checks=[], port=None, map_to=None,
+            port_label=None):
         if port_label is None:
             port_label = name
         service = Service(

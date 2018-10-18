@@ -3,20 +3,23 @@ from nomadgen.jobspec.ttypes import (
 )
 from nomadgen.api.time import SECOND
 
-import os
 
 class NGJob(Job):
     def __init__(self, id, dc=[], region='global', type='service'):
         Job.__init__(self)
-        self.Name=id
-        self.ID=id
-        self.Datacenters=dc
-        self.Region=region
-        if not type in ["service", "system", "batch"]:
-            raise ValueError("type must be on of `service`, `system` or `batch`")
-        self.Type=type
-        self.TaskGroups=[]
-        self.Constraints=[]
+        self.Name = id
+        self.ID = id
+        self.Datacenters = dc
+        self.Region = region
+        self.TaskGroups = []
+        self.Constraints = []
+        self.setJobType(type)
+
+    def setJobType(self, type):
+        if type not in ["service", "system", "batch"]:
+            raise ValueError(
+                "type must be on of `service`, `system` or `batch`")
+        self.Type = type
 
     def addTaskGroup(self, name="servers", workers=1, canaries=0):
         tg = TaskGroup(
@@ -25,7 +28,7 @@ class NGJob(Job):
             Tasks=[],
         )
         if self.Type != 'batch':
-            tg.Update=UpdateStrategy(
+            tg.Update = UpdateStrategy(
                 MaxParallel=1,
                 Stagger=3 * SECOND,
                 HealthyDeadline=300 * SECOND,
@@ -80,18 +83,19 @@ class NGJob(Job):
 
     def addConstraint(self, arg1, arg2=None):
         if arg2:
-            constraint=self.buildConstraint(
+            constraint = self.buildConstraint(
                 attr=arg1,
                 value=arg2,
             )
         else:
-            constraint=arg1
+            constraint = arg1
         assert(isinstance(constraint, Constraint))
         self.Constraints.append(constraint)
         return self
 
     def distinctHosts(self, flag=True):
         self.addConstraint(
-            self.buildConstraint(operator="distinct_hosts", value=str(flag).lower())
+            self.buildConstraint(
+                operator="distinct_hosts", value=str(flag).lower())
         )
         return self

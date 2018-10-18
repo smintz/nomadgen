@@ -1,12 +1,13 @@
 from nomadgen.jobspec.ttypes import Resources, Port, NetworkResource
 
+
 class CommonResources(Resources):
 
     def __init__(self, cpu=100, memory=128):
         Resources.__init__(self)
-        self.CPU=cpu
-        self.MemoryMB=memory
-        self.Networks=[
+        self.CPU = cpu
+        self.MemoryMB = memory
+        self.Networks = [
             NetworkResource(
                 MBits=1,
                 DynamicPorts=[],
@@ -21,4 +22,3 @@ class CommonResources(Resources):
             self.Networks[0].DynamicPorts.append(Port(Label=name))
 
         return self
-

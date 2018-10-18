@@ -1,14 +1,14 @@
 from nomadgen.struct_parser import StructParser
-CONSUL_VERSION='1.2.2'
+CONSUL_VERSION = '1.2.2'
 
 if __name__ == "__main__":
     StructParser(
         version='v' + CONSUL_VERSION,
         product='consul',
         override_field={
-            'ServiceDefinitionConnectProxy':{'Config':'string'},
-            'ServiceNode':{
-                'ServiceKind':'string',
+            'ServiceDefinitionConnectProxy': {'Config': 'string'},
+            'ServiceNode': {
+                'ServiceKind': 'string',
             },
         },
         tr_types={
