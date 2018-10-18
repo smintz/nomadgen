@@ -1,6 +1,7 @@
 import unittest
 
-from nomadgen.api import Job, DockerTask, ExecTask
+from nomadgen.api import DockerTask, ExecTask
+
 
 class JobTestCase(unittest.TestCase):
     def setUp(self):
@@ -8,12 +9,12 @@ class JobTestCase(unittest.TestCase):
         pass
 
     def test_exec_task(self):
-        task=ExecTask('hello')
+        task = ExecTask('hello')
         self.assertEqual(task.Driver, "exec")
         self.assertEqual(task.Name, "hello")
 
     def test_docker_task(self):
-        task=DockerTask('hello', image='hashicorp/http-echo')
+        task = DockerTask('hello', image='hashicorp/http-echo')
         self.assertEqual(task.Driver, "docker")
         self.assertEqual(task.Name, "hello")
         self.assertEqual(task.Config.image, "hashicorp/http-echo")
@@ -37,6 +38,9 @@ class JobTestCase(unittest.TestCase):
         self.assertEqual(my_service.PortLabel, 'http')
         self.assertTrue('http' in self.task.Config.port_map[0].keys())
         self.assertEqual(self.task.Config.port_map[0]['http'], '8080')
-        self.assertEqual(self.task.Resources.Networks[0].DynamicPorts[0].Label, 'http')
+        self.assertEqual(
+            self.task.Resources.Networks[0].DynamicPorts[0].Label, 'http')
+
+
 if __name__ == '__main__':
     unittest.main()

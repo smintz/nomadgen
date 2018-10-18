@@ -8,5 +8,9 @@ services:
 before_install:
   - docker pull smintz/nomadgen-builder
 
+install:
+  - pip install --upgrade pycodestyle
+
 script:
   - docker run --privileged -v /home/travis/build/smintz/nomadgen:/work smintz/nomadgen-builder /bin/bash -c "cd /work; pip install setuptools && make deps && make"
+  - pycodestyle --exclude=constants.py,ttypes.py nomadgen

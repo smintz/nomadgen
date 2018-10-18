@@ -1,49 +1,43 @@
 import requests
 import json
-import click
-from time import sleep
 
-from nomadgen.helpers import validate_json_output, jobToJSON, fromJson, writeToJSON
+from nomadgen.helpers import fromJson
 
 from nomadgen.consul.ttypes import (
-    IndexedNodeServices,
     IndexedServices,
     IndexedServiceNodes,
-    IndexedCheckServiceNodes,
-    IndexedHealthChecks,
-    IndexedNodeDump,
-    QueryMeta,
-    IndexedNodes,
 )
 
+
 class ConsulAPI(object):
-    default_params={}
-    verify_tls=None
-    cert_path=None
-    key_path=None
-    job=None
+    default_params = {}
+    verify_tls = None
+    cert_path = None
+    key_path = None
+    job = None
+
     def __init__(self, addr='http://127.0.0.1:8500'):
-        self.addr=addr
+        self.addr = addr
 
     def get_services(self):
-        result=self.get('/v1/catalog/services')
+        result = self.get('/v1/catalog/services')
         return IndexedServices().readFromJson(result.text)
 
     def get_service(self, service_id):
-        result=self.get('/v1/catalog/service/' + service_id )
+        result = self.get('/v1/catalog/service/' + service_id)
         _my = json.dumps({'ServiceNodes': json.loads(result.text)})
         return fromJson(_my, IndexedServiceNodes())
 
     def set_ca(self, ca):
-        self.verify_tls=ca
+        self.verify_tls = ca
         return self
 
     def set_tls_key(self, key):
-        self.key_path=key
+        self.key_path = key
         return self
 
     def set_tls_cert(self, cert):
-        self.cert_path=cert
+        self.cert_path = cert
         return self
 
     def get_tls_tuple(self):
@@ -90,4 +84,3 @@ class ConsulAPI(object):
             params=params,
             cert=self.get_tls_tuple(),
         )
-
