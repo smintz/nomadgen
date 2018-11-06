@@ -1,5 +1,5 @@
 from nomadgen.struct_parser import StructParser
-NOMAD_VERSION = '0.8.3'
+NOMAD_VERSION = '0.8.6'
 
 if __name__ == "__main__":
     drivers = StructParser(
