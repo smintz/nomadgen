@@ -9,7 +9,7 @@ thrift_gen: deps
 	PYTHONPATH=. python nomadgen/consul_meta.py > if/consul.thrift
 	thrift1 --gen py:json -out nomadgen if/consul.thrift
 
-test: thrift_gen
+test:thrift_gen
 	pip install -r dev-requirements.txt
 	PYTHONPATH=. python -m unittest discover
 

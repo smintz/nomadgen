@@ -1,5 +1,5 @@
 from nomadgen.struct_parser import StructParser
-CONSUL_VERSION = '1.2.2'
+CONSUL_VERSION = '1.3.0'
 
 if __name__ == "__main__":
     StructParser(

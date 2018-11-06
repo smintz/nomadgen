@@ -54,10 +54,11 @@ def get_random_job():
     job = Job(r)
     job.Datacenters = ['dc1']
     job.setWorkersCount(1)
-    task = ExecTask(r)
+    task = ExecTask(r, change_mode='restart')
     task.Config.command = "python"
     task.Config.command_args = "-m SimpleHTTPServer ${NOMAD_PORT_http}".split()
     task.addService(r, port_label='http', checks=[http_check])
+    task.addTemplate(task.makeTemplate("local/test", r))
     job.addTask(task)
     return job
 
@@ -166,6 +167,22 @@ sudo {nomad} agent -dev
         # Validate service is registered with consul
         result = self.consul_resolver.query(job.ID + '.service.consul', 'SRV')
         self.assertEqual(len(result), 3)
+
+        # Test canaries
+        nomadgen_client.job.setCanaries(1)
+        nomadgen_client.job.TaskGroups[0].Tasks[0].addTemplate(
+            nomadgen_client.job.TaskGroups[0].Tasks[0].makeTemplate(
+                "local/canary", "canary"))
+        nomadgen_client.run()
+        sleep(1)
+
+        # Validate deployment is running
+        deployments = nomadgen_client.get_running_deployments()
+        logging.debug(deployments)
+        self.assertEqual(len(deployments), 1)
+
+        nomadgen_client.wait(promote=True)
+        nomadgen_client.wait()
 
 
 if __name__ == '__main__':
