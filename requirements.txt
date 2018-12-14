@@ -6,3 +6,5 @@ click==6.7
 future
 typing
 pex
+tox
+pycodestyle

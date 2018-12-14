@@ -2,10 +2,15 @@ import requests
 import logging
 import json
 import click
+import six
 from time import sleep
 
 from nomadgen.helpers import (
-    validate_json_output, jobToJSON, fromJson, writeToJSON)
+    validate_json_output,
+    jobToJSON,
+    fromJson,
+    writeToJSON,
+)
 
 from nomadgen.jobspec.ttypes import (
     JobAllocationsResponse,
@@ -26,7 +31,7 @@ class NomadgenAPI(object):
     key_path = None
     job = None
 
-    def __init__(self, addr='http://127.0.0.1:4646'):
+    def __init__(self, addr="http://127.0.0.1:4646"):
         self.addr = addr
 
     def set_job(self, job):
@@ -34,7 +39,7 @@ class NomadgenAPI(object):
         return self
 
     def set_region(self, region):
-        self.default_params['region'] = region
+        self.default_params["region"] = region
         return self
 
     def set_ca(self, ca):
@@ -57,20 +62,17 @@ class NomadgenAPI(object):
 
     def diff(self):
         job = self.job
-        click.echo(click.style("Running diff...", fg='green'))
+        click.echo(click.style("Running diff...", fg="green"))
         result = self.post(
             "/v1/job/" + job.ID + "/plan",
-            data=jobToJSON(JobPlanRequest(Job=job, Diff=True))
+            data=jobToJSON(JobPlanRequest(Job=job, Diff=True)),
         )
         validate_json_output(result.text, JobPlanResponse())
         return fromJson(result.text, JobPlanResponse())
 
     def run(self):
         payload = jobToJSON(JobRegisterRequest(Job=self.job))
-        result = self.post(
-            "/v1/job/" + self.job.ID,
-            data=payload,
-        )
+        result = self.post("/v1/job/" + self.job.ID, data=payload)
         validate_json_output(result.text, JobRegisterResponse())
         d = fromJson(result.text, JobRegisterResponse())
         return d
@@ -81,7 +83,8 @@ class NomadgenAPI(object):
 
     def promote(self, deployment):
         payload = DeploymentPromoteRequest(
-            DeploymentID=deployment.ID, All=True)
+            DeploymentID=deployment.ID, All=True
+        )
         self.post(
             "/v1/deployment/promote/" + deployment.ID,
             data=writeToJSON(payload),
@@ -90,21 +93,17 @@ class NomadgenAPI(object):
     def eval(self):
         payload = {
             "JobID": self.job.ID,
-            "EvalOptions": {
-                "ForceReschedule": True
-            }
+            "EvalOptions": {"ForceReschedule": True},
         }
         result = self.post(
-            "/v1/job/" + self.job.ID + '/evaluate',
-            data=payload,
+            "/v1/job/" + self.job.ID + "/evaluate", data=payload
         )
         validate_json_output(result.text)
 
     def get_deployments(self, index=0):
         sleep(1)
         result = self.get(
-            "/v1/job/" + self.job.ID + "/deployments",
-            params={'index': index}
+            "/v1/job/" + self.job.ID + "/deployments", params={"index": index}
         )
 
         # This endpoints returns []Deployments which cannot be parsed by thrift
@@ -113,8 +112,11 @@ class NomadgenAPI(object):
 
     def get_running_deployments(self, index=0):
         d = self.get_deployments(index)
-        return [deployment for deployment
-                in d.Deployments if deployment.Status == 'running']
+        return [
+            deployment
+            for deployment in d.Deployments
+            if deployment.Status == "running"
+        ]
 
     def wait(self, index=0, promote=False):
         click.echo("Waiting for deployment to finish")
@@ -122,22 +124,25 @@ class NomadgenAPI(object):
         while len(running_deployments) > 0:
             cd = running_deployments[0]
             awaiting_promotion = [
-                ds for tg, ds
-                in cd.TaskGroups.iteritems()
-                if ds.DesiredCanaries > 0 and
-                ds.DesiredCanaries ==
-                len(ds.PlacedCanaries) == ds.HealthyAllocs]
+                ds
+                for tg, ds in six.iteritems(cd.TaskGroups)
+                if ds.DesiredCanaries > 0
+                and ds.DesiredCanaries
+                == len(ds.PlacedCanaries)
+                == ds.HealthyAllocs
+            ]
 
             logging.info(
-                "%d task groups awaiting promotion" % len(awaiting_promotion))
+                "%d task groups awaiting promotion" % len(awaiting_promotion)
+            )
             logging.debug(awaiting_promotion)
             if promote and len(awaiting_promotion) == len(cd.TaskGroups):
                 self.promote(cd)
             running_deployments = self.get_running_deployments(cd.ModifyIndex)
 
     def get_allocations(self):
-        result = self.get('/v1/job/' + self.job.ID + '/allocations')
-        _my = json.dumps({'Allocations': json.loads(result.text)})
+        result = self.get("/v1/job/" + self.job.ID + "/allocations")
+        _my = json.dumps({"Allocations": json.loads(result.text)})
         return fromJson(_my, JobAllocationsResponse())
 
     # HTTP Methods

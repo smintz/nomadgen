@@ -3,10 +3,7 @@ import json
 
 from nomadgen.helpers import fromJson
 
-from nomadgen.consul.ttypes import (
-    IndexedServices,
-    IndexedServiceNodes,
-)
+from nomadgen.consul.ttypes import IndexedServices, IndexedServiceNodes
 
 
 class ConsulAPI(object):
@@ -16,16 +13,16 @@ class ConsulAPI(object):
     key_path = None
     job = None
 
-    def __init__(self, addr='http://127.0.0.1:8500'):
+    def __init__(self, addr="http://127.0.0.1:8500"):
         self.addr = addr
 
     def get_services(self):
-        result = self.get('/v1/catalog/services')
+        result = self.get("/v1/catalog/services")
         return IndexedServices().readFromJson(result.text)
 
     def get_service(self, service_id):
-        result = self.get('/v1/catalog/service/' + service_id)
-        _my = json.dumps({'ServiceNodes': json.loads(result.text)})
+        result = self.get("/v1/catalog/service/" + service_id)
+        _my = json.dumps({"ServiceNodes": json.loads(result.text)})
         return fromJson(_my, IndexedServiceNodes())
 
     def set_ca(self, ca):
