@@ -1,5 +1,5 @@
 from nomadgen.struct_parser import StructParser
-NOMAD_VERSION = '0.8.6'
+NOMAD_VERSION = '0.8.5'
 
 if __name__ == "__main__":
     drivers = StructParser(
@@ -27,7 +27,18 @@ if __name__ == "__main__":
         override_field={'Task': {'Config': 'DriverConfig'}},
         file_paths=[
             '/nomad/structs/structs.go',
+            '/nomad/structs/batch_future.go',
+            '/nomad/structs/bitmap.go',
             '/nomad/structs/diff.go',
+            '/nomad/structs/errors.go',
+            '/nomad/structs/funcs.go',
+            '/nomad/structs/network.go',
+            '/nomad/structs/node.go',
+            '/nomad/structs/node_class.go',
+            '/nomad/structs/operator.go',
+            '/nomad/structs/streaming_rpc.go',
+            '/nomad/structs/structs.generated.go',
+            '/nomad/structs/structs_codegen.go',
         ],
         start_keys=[
             'QueryMeta',
