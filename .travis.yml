@@ -1,21 +1,46 @@
 sudo: required
 language: python
-services:
-- docker
-before_install:
-- docker pull smintz/nomadgen-builder
+addons:
+  homebrew:
+    packages:
+      - mstch
+      - folly
+      - bison
+      - openssl
+      - readline
+      - zlib
+      - pyenv
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+      python: 2.7
+      env: TOXENV=py27
+    - os: linux
+      dist: xenial
+      python: 3.6
+      env: TOXENV=py36
+    - os: osx
+      language: generic
+      env: PYTHON=2.7.15
+    - os: osx
+      language: generic
+      env: PYTHON=3.6.7
+    - os: osx
+      language: generic
+      env: PYTHON=3.7.1
 install:
-- pip install --upgrade pycodestyle
+- ./.travis/install.sh
 script:
-- docker run --privileged -v /home/travis/build/smintz/nomadgen:/work smintz/nomadgen-builder
-  /bin/bash -c "cd /work; pip install setuptools && make deps && make test"
-- pycodestyle --exclude=constants.py,ttypes.py nomadgen
-- docker run --privileged -v /home/travis/build/smintz/nomadgen:/work smintz/nomadgen-builder
-  /bin/bash -c "cd /work; pip install setuptools && make deps && make pex"
+  - ./.travis/runner.sh make test
+  - ./.travis/runner.sh pycodestyle --exclude=constants.py,ttypes.py nomadgen
+  - ./.travis/runner.sh make pex
 deploy:
   provider: releases
+  skip_cleanup: true
   api_key:
-    secure: aasnO65FzNPYwEdeAKVs2+5pkWaL8wB1tVZS2zOuZupGcQKc6mZGupnUkCFqE95MbjemRWbIADxkmf5EXc+ye62LqFVgtY2I6egpiOaBXCPp+ecLWG+t2BRnX8VgFQGqRAW81RoqHHNmMKZJ1pLmtyW5BH2qmMipOOr9SItx9NEZv78Tz3ywDJMuDD+uXUiALraSltnBAE2WNXlXOnPfX7rTQdAgLU3EH1fOGutmi9Kv9Qy722DzX8XIPqMOqCu6XQeTK9lj8/mbxMiKRXSbTdradmJkdjrAQV/N36pwMYpbT9c5FmPZsKuq/iplkTXWWIOD6Ld4Ax14AcIY4+uIyiuAfVal2FxflMYTUbcsAzCka9orJPJKfsi71Ke1PXzUyr7FORw7FuMJFGlHfRCY8FlJwuCvIsrK4cLtKogIoJPrvnKajghubuFNCMuELnFcZ6B76N/D1aTx98SGXBu4/QXH5lCTUtIpsbMlWnJb/0MjRfv72sRnCrs8HmdR4F7kd/LYpklfTtYohjDMwc/EvA2G5msRAz9favc3s21NA/T9kv05hxGy33xMZMQyvNBW7FFsI0NbnG/GwBIOTtapcbzDDFXhCQ3c3SH7yC0NyNImu6l1+JiNeKMe/o+qgwxuele6Lmu889uBYRloOalTU1ZdyyY4xJD1R87+2Lagxjc=
-  file: ./build/nomadgen.pex
+    secure: "XqRjMtM56AZyLG/iLSww8bql3biX0YGqZWLpznh0Vqf+Y0fiQebspLIWo30cgWqNax4n+HMtAK3D2e8bFu2YUJt823J97jOKWJqpFlWgAunEQwHpxzj+xU2qo3xozYb7ESnqjaDEuD99gMNK4JB6eOCLykHF0hO5ERiilGVq69r/x3tKz7ePnIiSM/f1Cin1sg9Cl26QTpRlNjKBZfMb0j9Fhkph8THJWDI7UvDBwncgANvO/46m5x9L3MZKDLxH8XQoMZPEThwXPYyOH4pN897xEVKpkksScEU6MfGsgqIz4c1jBvfomvhVB+qA55xdKb6XfhynB7yD45ATX3sCSGCQXL/zJcgudzOJxeVpUrKsXM6jhGlg06CeiAASqtbl0TOs2NghSEwd3PWMhqQsDKL6g7gIfTmJBJNsVFAZgDXmb01uXHXhSnrJy5YqgK4A9KwVl4KNSqK4HLHkwtVLJ/lazAGIjHkebkkCr9PTqDgAhowGcSKsUBA33edS5J9L9qqolHRLe7VBnPikFc1pj52aXcurvzDg3AD1V9bnrnsyn4jhs0yEur3lSOuYwkfr/XO4YhUsET2gmaKV+jaImE2zy/d4r+pVtye1or5GgT+dOhh7c3n7POUsq1IgeD21HK3dFA/GbiHOg6re71h/ajQU/7vjQERnfS5J/hgiQjQ="
+  file_glob: true
+  file: "./build/*"
   on:
     tags: true

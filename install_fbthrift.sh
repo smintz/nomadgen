@@ -33,7 +33,7 @@ sudo apt-get install --no-install-recommends -y -qq \
 #https://github.com/no1msd/mstch
 cd $WORKDIR
 curl -L https://github.com/no1msd/mstch/archive/1.0.2.tar.gz -o mstch.tar.gz
-tar xvf mstch.tar.gz
+tar xf mstch.tar.gz
 pushd mstch-1.0.2
 cmake .
 make -j $(nproc)
@@ -42,7 +42,7 @@ popd
 #https://github.com/facebook/zstd.git
 cd $WORKDIR
 curl -L https://github.com/facebook/zstd/archive/v1.3.5.tar.gz -o zstd.tar.gz
-tar xvf zstd.tar.gz
+tar xf zstd.tar.gz
 pushd zstd-1.3.5
 make -j $(nproc)
 sudo make install 
@@ -50,19 +50,19 @@ popd
 #https://github.com/facebook/folly.git
 cd $WORKDIR
 curl -L https://github.com/facebook/folly/archive/v${FB_TAG}.tar.gz -o folly-${FB_TAG}.tar.gz
-tar xvf folly-${FB_TAG}.tar.gz
+tar xf folly-${FB_TAG}.tar.gz
 pushd folly-${FB_TAG}
 cmake .
 make -j $(nproc)
 sudo make install
 cd $WORKDIR
 curl -L https://github.com/facebook/fbthrift/archive/v${FB_TAG}.tar.gz -o fbthrift-${FB_TAG}.tar.gz
-tar xvf fbthrift-${FB_TAG}.tar.gz
+tar xf fbthrift-${FB_TAG}.tar.gz
 pushd fbthrift-${FB_TAG}
 cmake -Dcompiler_only=ON .
 make -j $(nproc)
 sudo make install 
 popd
 
-rm -rvf $WORKDIR
+rm -rf $WORKDIR
 rm -rf /var/lib/apt/lists/*
