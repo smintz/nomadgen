@@ -49,7 +49,7 @@ class StructParser(object):
                 line = is_comment.group(1)
 
             tr_type = TYPE_REGEX.match(line)
-            if tr_type:
+            if tr_type and not tr_type.group('type_target').endswith('{'):
                 self.tr_types[tr_type.group('type_name')] = \
                     tr_type.group('type_target')
 
@@ -71,14 +71,16 @@ class StructParser(object):
 
                 field_def = FIELD_REGEX.match(line)
                 if field_def:
-                    value = self.tr_types.get(
-                        field_def.group('field_type').strip(),
-                        field_def.group('field_type').strip())
+                    value = field_def.group('field_type').strip()
                     key = TR_NAMES.get(field_def.group('ms_field_name'),
                                        field_def.group('ms_field_name'))
                     if not key:
                         key = field_def.group('field_name')
                     self.all_structs[self.current_struct][key] = value
+                    logging.debug("%s >>> %s = %s (%s)" % (
+                        self.current_struct, key, value,
+                        field_def.group('field_type'))
+                    )
 
                     # DriverConfigs are being set for each driver separatly but
                     # thrift only accept one type of struct as value.
@@ -89,6 +91,15 @@ class StructParser(object):
             if is_eos:
                 self.current_struct = None
 
+    def fix_types(self):
+        new_all_structs = {}
+        for struct_name, data in self.all_structs.iteritems():
+            new_all_structs[struct_name] = {}
+            for field_name, field_type in data.iteritems():
+                field_type = self.tr_types.get(field_type, field_type)
+                new_all_structs[struct_name][field_name] = field_type
+        self.all_structs = new_all_structs
+
     def get_struct_powers(self):
         # This will help resolve dependencies between structs
         my = dict()
@@ -98,6 +109,7 @@ class StructParser(object):
         return my
 
     def print_all(self):
+        self.fix_types()
         tracker = set()
         for key, val in sorted(
                 self.get_struct_powers().items(),
@@ -193,6 +205,8 @@ def normalize_field_type(field_type):
     if field_type == 'int':
         return 'i16'
     if field_type.endswith('int64'):
+        return 'i64'
+    if field_type.endswith('int32'):
         return 'i64'
     if field_type == '[]byte':
         return 'string'
