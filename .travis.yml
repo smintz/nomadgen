@@ -16,6 +16,6 @@ deploy:
   provider: releases
   api_key:
     secure: aasnO65FzNPYwEdeAKVs2+5pkWaL8wB1tVZS2zOuZupGcQKc6mZGupnUkCFqE95MbjemRWbIADxkmf5EXc+ye62LqFVgtY2I6egpiOaBXCPp+ecLWG+t2BRnX8VgFQGqRAW81RoqHHNmMKZJ1pLmtyW5BH2qmMipOOr9SItx9NEZv78Tz3ywDJMuDD+uXUiALraSltnBAE2WNXlXOnPfX7rTQdAgLU3EH1fOGutmi9Kv9Qy722DzX8XIPqMOqCu6XQeTK9lj8/mbxMiKRXSbTdradmJkdjrAQV/N36pwMYpbT9c5FmPZsKuq/iplkTXWWIOD6Ld4Ax14AcIY4+uIyiuAfVal2FxflMYTUbcsAzCka9orJPJKfsi71Ke1PXzUyr7FORw7FuMJFGlHfRCY8FlJwuCvIsrK4cLtKogIoJPrvnKajghubuFNCMuELnFcZ6B76N/D1aTx98SGXBu4/QXH5lCTUtIpsbMlWnJb/0MjRfv72sRnCrs8HmdR4F7kd/LYpklfTtYohjDMwc/EvA2G5msRAz9favc3s21NA/T9kv05hxGy33xMZMQyvNBW7FFsI0NbnG/GwBIOTtapcbzDDFXhCQ3c3SH7yC0NyNImu6l1+JiNeKMe/o+qgwxuele6Lmu889uBYRloOalTU1ZdyyY4xJD1R87+2Lagxjc=
-  file: nomadgen.pex
+  file: ./build/nomadgen.pex
   on:
     repo: smintz/nomadgen
