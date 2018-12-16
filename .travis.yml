@@ -9,11 +9,11 @@ addons:
 matrix:
   include:
     - os: linux
-      dist: trusty
+      dist: xenial
       python: 2.7
       env: TOXENV=py27
     - os: linux
-      dist: trusty
+      dist: xenial
       python: 3.6
       env: TOXENV=py36
     - os: osx
