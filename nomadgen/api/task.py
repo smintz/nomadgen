@@ -1,12 +1,12 @@
 from nomadgen.jobspec.ttypes import (
     Task, LogConfig, Service, Template
 )
-from nomadgen.api.resources import CommonResources
+from nomadgen.api.resources import NGResources
 
 
 class NGTask(Task):
     def __init__(self, name, image=None, change_mode='noop',
-                 install_certs=False, force_pull_image=False):
+                 force_pull_image=False, cpu=100, memory=128):
         Task.__init__(self)
         self.Name = name
         self.image = image
@@ -15,7 +15,7 @@ class NGTask(Task):
         self.setTaskDriver()
         self.Artifacts = []
         self.LogConfig = LogConfig()
-        self.Resources = CommonResources()
+        self.Resources = NGResources(cpu, memory)
         self.Services = []
         self.Templates = []
 

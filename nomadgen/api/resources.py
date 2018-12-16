@@ -1,7 +1,7 @@
 from nomadgen.jobspec.ttypes import Resources, Port, NetworkResource
 
 
-class CommonResources(Resources):
+class NGResources(Resources):
 
     def __init__(self, cpu=100, memory=128):
         Resources.__init__(self)

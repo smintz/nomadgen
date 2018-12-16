@@ -1,6 +1,7 @@
 nomadgen/jobspec
 nomadgen/consul/
 nomadgen.egg-info
+.tox
 dist
 build
 *.pyc

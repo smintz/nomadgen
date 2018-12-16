@@ -2,8 +2,9 @@ import re
 import requests
 import logging
 import sys
+import six
 
-logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
 STRUCT_REGEX = re.compile(r'^type (?P<struct_name>[^\ ]*) struct {$')
 TYPE_REGEX = re.compile(r'^type (?P<type_name>[^\ ]*) (?P<type_target>.*)$')
@@ -93,9 +94,9 @@ class StructParser(object):
 
     def fix_types(self):
         new_all_structs = {}
-        for struct_name, data in self.all_structs.iteritems():
+        for struct_name, data in six.iteritems(self.all_structs):
             new_all_structs[struct_name] = {}
-            for field_name, field_type in data.iteritems():
+            for field_name, field_type in six.iteritems(data):
                 field_type = self.tr_types.get(field_type, field_type)
                 new_all_structs[struct_name][field_name] = field_type
         self.all_structs = new_all_structs
@@ -124,7 +125,7 @@ class StructParser(object):
         index = 1
         arr.append('struct %s {' % name)
         set_fix_old_new = False
-        for field_name, field_type in obj.iteritems():
+        for field_name, field_type in six.iteritems(obj):
             if field_name == '-':
                 continue
 

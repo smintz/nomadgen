@@ -2,6 +2,7 @@ import requests
 import logging
 import json
 import click
+import six
 from time import sleep
 
 from nomadgen.helpers import (
@@ -123,7 +124,7 @@ class NomadgenAPI(object):
             cd = running_deployments[0]
             awaiting_promotion = [
                 ds for tg, ds
-                in cd.TaskGroups.iteritems()
+                in six.iteritems(cd.TaskGroups)
                 if ds.DesiredCanaries > 0 and
                 ds.DesiredCanaries ==
                 len(ds.PlacedCanaries) == ds.HealthyAllocs]
