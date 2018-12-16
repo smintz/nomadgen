@@ -5,6 +5,7 @@ addons:
     packages:
       - mstch
       - folly
+      - bison
 matrix:
   include:
     - os: linux

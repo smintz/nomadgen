@@ -5,6 +5,7 @@ mkdir -p $WORKDIR
 FB_TAG='2018.09.10.00'
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
   brew update
+  export PATH="/usr/local/opt/bison/bin:$PATH"
   cd $WORKDIR
   export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
   curl -L https://github.com/facebook/fbthrift/archive/v${FB_TAG}.tar.gz -o fbthrift-${FB_TAG}.tar.gz
