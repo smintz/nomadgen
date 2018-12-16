@@ -19,6 +19,6 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
   # e.g. brew install pyenv-virtualenv
 
 else
-  apt-get update
-  bash -x $(dirname $0)/../install_fbthrift.sh
+  sudo apt-get update
+  sudo bash -x $(dirname $0)/../install_fbthrift.sh
 fi
