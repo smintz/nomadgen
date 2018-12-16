@@ -1,10 +1,6 @@
 sudo: required
 language: python
 addons:
-  apt:
-    packages:
-      - libmstch-dev
-      - libzstd-dev
   homebrew:
     packages:
       - mstch
