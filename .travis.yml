@@ -17,11 +17,14 @@ matrix:
       python: 3.6
       env: TOXENV=py36
     - os: osx
-      python: 2.7
-      env: TOXENV=py27
+      language: generic
+      env: PYTHON=2.7.15
     - os: osx
-      python: 3.7
-      env: TOXENV=py37
+      language: generic
+      env: PYTHON=3.6.7
+    - os: osx
+      language: generic
+      env: PYTHON=3.7.1
 install:
 - pip install --upgrade pycodestyle
 - ./.travis/install.sh

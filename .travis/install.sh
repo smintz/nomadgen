@@ -9,15 +9,21 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
   cd $WORKDIR
   export OPENSSL_ROOT_DIR=/usr/local/opt/openssl
   curl -L https://github.com/facebook/fbthrift/archive/v${FB_TAG}.tar.gz -o fbthrift-${FB_TAG}.tar.gz
-  tar xvf fbthrift-${FB_TAG}.tar.gz
+  tar xf fbthrift-${FB_TAG}.tar.gz
   pushd fbthrift-${FB_TAG}
   cmake -Dcompiler_only=ON .
   make -j $(nproc)
-  sudo make install 
+  sudo make install
   popd
 
-  # Install some custom requirements on OS X
-  # e.g. brew install pyenv-virtualenv
+  brew install openssl readline zlib
+  brew outdated pyenv || brew upgrade pyenv
+  brew install pyenv-virtualenv
+  pyenv install $PYTHON
+  export PYENV_VERSION=$PYTHON
+  pyenv local $PYTHON
+  export PATH="$HOME/.pyenv/shims:${PATH}"
+  python --version
 
 else
   sudo apt-get update
