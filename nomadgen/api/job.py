@@ -1,11 +1,16 @@
 from nomadgen.jobspec.ttypes import (
-    Job, TaskGroup, Task, UpdateStrategy, Constraint, EphemeralDisk
+    Job,
+    TaskGroup,
+    Task,
+    UpdateStrategy,
+    Constraint,
+    EphemeralDisk,
 )
 from nomadgen.api.time import SECOND
 
 
 class NGJob(Job):
-    def __init__(self, id, dc=[], region='global', type='service'):
+    def __init__(self, id, dc=[], region="global", type="service"):
         Job.__init__(self)
         self.Name = id
         self.ID = id
@@ -17,17 +22,12 @@ class NGJob(Job):
 
     def setJobType(self, type):
         if type not in ["service", "system", "batch"]:
-            raise ValueError(
-                "type must be on of `service`, `system` or `batch`")
+            raise ValueError("type must be on of `service`, `system` or `batch`")
         self.Type = type
 
     def addTaskGroup(self, name="servers", workers=1, canaries=0):
-        tg = TaskGroup(
-            Name=name,
-            Count=workers,
-            Tasks=[],
-        )
-        if self.Type != 'batch':
+        tg = TaskGroup(Name=name, Count=workers, Tasks=[])
+        if self.Type != "batch":
             tg.Update = UpdateStrategy(
                 MaxParallel=1,
                 Stagger=3 * SECOND,
@@ -70,32 +70,33 @@ class NGJob(Job):
         self.TaskGroups[index].EphemeralDisk = disk
         return self
 
-    def buildConstraint(self, attr=None, operator='=', value=None):
-        assert(operator in [
-            '=', '!=', '>', '>=', '<', '<=', 'distinct_hosts',
-            'distinct_property', 'regexp', 'set_contains', 'version'
-        ])
-        return Constraint(
-            LTarget=attr,
-            Operand=operator,
-            RTarget=value
-        )
+    def buildConstraint(self, attr=None, operator="=", value=None):
+        assert operator in [
+            "=",
+            "!=",
+            ">",
+            ">=",
+            "<",
+            "<=",
+            "distinct_hosts",
+            "distinct_property",
+            "regexp",
+            "set_contains",
+            "version",
+        ]
+        return Constraint(LTarget=attr, Operand=operator, RTarget=value)
 
     def addConstraint(self, arg1, arg2=None):
         if arg2:
-            constraint = self.buildConstraint(
-                attr=arg1,
-                value=arg2,
-            )
+            constraint = self.buildConstraint(attr=arg1, value=arg2)
         else:
             constraint = arg1
-        assert(isinstance(constraint, Constraint))
+        assert isinstance(constraint, Constraint)
         self.Constraints.append(constraint)
         return self
 
     def distinctHosts(self, flag=True):
         self.addConstraint(
-            self.buildConstraint(
-                operator="distinct_hosts", value=str(flag).lower())
+            self.buildConstraint(operator="distinct_hosts", value=str(flag).lower())
         )
         return self

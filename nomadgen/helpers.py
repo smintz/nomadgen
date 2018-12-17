@@ -1,6 +1,9 @@
 from thrift.util import Serializer
 from thrift.protocol.TSimpleJSONProtocol import (
-    TSimpleJSONProtocolFactory, TSimpleJSONProtocol, TProtocolException)
+    TSimpleJSONProtocolFactory,
+    TSimpleJSONProtocol,
+    TProtocolException,
+)
 
 import click
 import json
@@ -56,5 +59,5 @@ def validate_json_output(text, spec=None):
             click.echo(json.dumps(j, indent=2))
         return True
     except (ValueError, TProtocolException):
-        click.echo(click.style(text, fg='red'))
+        click.echo(click.style(text, fg="red"))
         return False

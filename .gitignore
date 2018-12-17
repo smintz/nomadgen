@@ -6,3 +6,4 @@ dist
 build
 *.pyc
 pip-selfcheck.json
+.python-version

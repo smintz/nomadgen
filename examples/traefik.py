@@ -4,7 +4,7 @@ from nomadgen.jobspec.ttypes import Template
 from nomadgen.util import export_if_last
 
 # Create a job from nomadgen.api.Job
-job = Job('traefik')
+job = Job("traefik")
 
 # Set the Datacenters where the job should run in.
 job.Datacenters = ["dc1"]
@@ -14,9 +14,9 @@ job.Datacenters = ["dc1"]
 job.setWorkersCount(1)
 
 task = (
-    DockerTask('traefik', 'traefik:latest')
-    .setPort('http', 80)
-    .setPort('traefik', 19999, map_to=19999)
+    DockerTask("traefik", "traefik:latest")
+    .setPort("http", 80)
+    .setPort("traefik", 19999, map_to=19999)
 )
 
 task.Leader = True

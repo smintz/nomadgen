@@ -6,6 +6,10 @@ addons:
       - mstch
       - folly
       - bison
+      - openssl
+      - readline
+      - zlib
+      - pyenv
 matrix:
   include:
     - os: linux
@@ -26,7 +30,6 @@ matrix:
       language: generic
       env: PYTHON=3.7.1
 install:
-- pip install --upgrade pycodestyle
 - ./.travis/install.sh
 script:
   - make test
