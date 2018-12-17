@@ -80,7 +80,9 @@ class ClientTest(unittest.TestCase):
         nomad = download("nomad", NOMAD_VERSION)
         consul = download("consul", CONSUL_VERSION)
         self.consul_proc = subprocess.Popen(
-            [consul, "agent", "-dev"], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            [consul, "agent", "-dev"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
         sleep(1)
         nomad_runner_txt = """\
@@ -95,7 +97,9 @@ exec {nomad} agent -dev
         nomad_runner_file.close()
         os.chmod("/tmp/nomad_runner.sh", 0o755)
         self.nomad_proc = subprocess.Popen(
-            ["/tmp/nomad_runner.sh"], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            ["/tmp/nomad_runner.sh"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
         sleep(5)
         self.consul_resolver = resolver.Resolver()
@@ -120,9 +124,13 @@ exec {nomad} agent -dev
 
         logging.info("[first] Validate allocation is running")
         allocs = nomadgen_client.get_allocations()
-        self.assertEqual(allocs.Allocations[0].TaskStates[job.ID].State, "running")
+        self.assertEqual(
+            allocs.Allocations[0].TaskStates[job.ID].State, "running"
+        )
 
-        logging.info("[first] Validate deployment completed with `successful` state")
+        logging.info(
+            "[first] Validate deployment completed with `successful` state"
+        )
         deployments = nomadgen_client.get_deployments()
         self.assertEqual(deployments.Deployments[0].Status, "successful")
 
@@ -133,13 +141,17 @@ exec {nomad} agent -dev
         self.assertEqual(len(answer.ServiceNodes), 1)
 
         logging.info("[first] Validate task is answering")
-        requests.get("http://127.0.0.1:%d" % answer.ServiceNodes[0].ServicePort)
+        requests.get(
+            "http://127.0.0.1:%d" % answer.ServiceNodes[0].ServicePort
+        )
 
         logging.info("Increase workers amount")
         nomadgen_client.job.setWorkersCount(3)
         diff = nomadgen_client.diff()
         logging.debug(diff)
-        self.assertEqual(diff.Annotations.DesiredTGUpdates["servers"].InPlaceUpdate, 1)
+        self.assertEqual(
+            diff.Annotations.DesiredTGUpdates["servers"].InPlaceUpdate, 1
+        )
         self.assertEqual(diff.Annotations.DesiredTGUpdates["servers"].Place, 2)
         nomadgen_client.run()
 
@@ -153,9 +165,13 @@ exec {nomad} agent -dev
         logging.info("[scale] Validate allocation is running")
         allocs = nomadgen_client.get_allocations()
         self.assertEqual(len(allocs.Allocations), 3)
-        self.assertEqual(allocs.Allocations[0].TaskStates[job.ID].State, "running")
+        self.assertEqual(
+            allocs.Allocations[0].TaskStates[job.ID].State, "running"
+        )
 
-        logging.info("[scale] Validate deployment completed with `successful` state")
+        logging.info(
+            "[scale] Validate deployment completed with `successful` state"
+        )
         deployments = nomadgen_client.get_deployments()
         self.assertEqual(deployments.Deployments[0].Status, "successful")
 

@@ -7,3 +7,4 @@ future
 typing
 pex
 tox
+pycodestyle

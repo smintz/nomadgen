@@ -23,7 +23,9 @@ class JobTestCase(unittest.TestCase):
         self.assertEqual(task.Config.auth[0].password, "bar")
 
     def test_add_template(self):
-        self.task.addTemplate(self.task.makeTemplate("local/test.txt", "Hello World!"))
+        self.task.addTemplate(
+            self.task.makeTemplate("local/test.txt", "Hello World!")
+        )
         my_template = self.task.Templates[0]
         self.assertEqual(my_template.DestPath, "local/test.txt")
         self.assertEqual(my_template.EmbeddedTmpl, "Hello World!")
@@ -36,7 +38,9 @@ class JobTestCase(unittest.TestCase):
         self.assertEqual(my_service.PortLabel, "http")
         self.assertTrue("http" in self.task.Config.port_map[0].keys())
         self.assertEqual(self.task.Config.port_map[0]["http"], "8080")
-        self.assertEqual(self.task.Resources.Networks[0].DynamicPorts[0].Label, "http")
+        self.assertEqual(
+            self.task.Resources.Networks[0].DynamicPorts[0].Label, "http"
+        )
 
 
 if __name__ == "__main__":

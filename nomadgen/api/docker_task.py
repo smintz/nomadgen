@@ -10,4 +10,6 @@ class DockerTask(NGTask):
         )
 
     def setDockerAuth(self, username, password):
-        self.Config.auth = [DockerDriverAuth(username=username, password=password)]
+        self.Config.auth = [
+            DockerDriverAuth(username=username, password=password)
+        ]

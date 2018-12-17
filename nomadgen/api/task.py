@@ -32,7 +32,9 @@ class NGTask(Task):
     ):
         if port_label is None:
             port_label = name
-        service = Service(Name=name, PortLabel=port_label, Tags=tags, Checks=checks)
+        service = Service(
+            Name=name, PortLabel=port_label, Tags=tags, Checks=checks
+        )
         self.Services.append(service)
         self.setPort(port_label, port, map_to)
         return self

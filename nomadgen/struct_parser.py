@@ -57,7 +57,9 @@ class StructParser(object):
 
             tr_type = TYPE_REGEX.match(line)
             if tr_type and not tr_type.group("type_target").endswith("{"):
-                self.tr_types[tr_type.group("type_name")] = tr_type.group("type_target")
+                self.tr_types[tr_type.group("type_name")] = tr_type.group(
+                    "type_target"
+                )
 
             struct_def = STRUCT_REGEX.match(line)
             if struct_def:
@@ -119,7 +121,9 @@ class StructParser(object):
         # This will help resolve dependencies between structs
         my = dict()
         for start_key in self.start_keys:
-            my.update(DependencyResolver(start_key, self.all_structs).track_dict)
+            my.update(
+                DependencyResolver(start_key, self.all_structs).track_dict
+            )
         return my
 
     def print_all(self):
@@ -143,7 +147,9 @@ class StructParser(object):
                 continue
 
             if self.override_field.get(name):
-                field_type = self.override_field[name].get(field_name, field_type)
+                field_type = self.override_field[name].get(
+                    field_name, field_type
+                )
 
             # Some structs define Old and New fields in the same line
             # https://github.com/hashicorp/nomad/blob/v0.8.3/nomad/structs/diff.go#L1034
@@ -174,7 +180,9 @@ class DependencyResolver(object):
         self.dep(start_key, 1)
 
     def get_tree(self):
-        ret = sorted(self.track_dict.items(), key=lambda i: i[1], reverse=False)
+        ret = sorted(
+            self.track_dict.items(), key=lambda i: i[1], reverse=False
+        )
         return ret
 
     def dep(self, key, counter):
@@ -186,7 +194,9 @@ class DependencyResolver(object):
             _key = _key.replace("map[string]", "")
             _key = _key.replace("*", "")
             if _key in self.track_dict.keys():
-                self.track_dict[_key] = self.track_dict.get(_key, counter) + counter
+                self.track_dict[_key] = (
+                    self.track_dict.get(_key, counter) + counter
+                )
             else:
                 self.dep(_key, self.track_dict.get(key) + counter)
 

@@ -6,7 +6,9 @@ class NGResources(Resources):
         Resources.__init__(self)
         self.CPU = cpu
         self.MemoryMB = memory
-        self.Networks = [NetworkResource(MBits=1, DynamicPorts=[], ReservedPorts=[])]
+        self.Networks = [
+            NetworkResource(MBits=1, DynamicPorts=[], ReservedPorts=[])
+        ]
 
     def setPort(self, name, port=None):
         if port:

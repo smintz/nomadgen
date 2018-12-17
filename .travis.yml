@@ -32,8 +32,9 @@ matrix:
 install:
 - ./.travis/install.sh
 script:
-  - make test
-  - make pex
+  - ./.travis/runner.sh make test
+  - ./.travis/runner.sh pycodestyle --exclude=constants.py,ttypes.py nomadgen
+  - ./.travis/runner.sh make pex
 deploy:
   provider: releases
   skip_cleanup: true

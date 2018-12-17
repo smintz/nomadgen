@@ -16,3 +16,6 @@ test:thrift_gen
 pex: thrift_gen
 	rm -rf ~/.pex/build/nomadgen* ~/.pex/install/nomadgen*
 	./build_pex.sh
+
+fmt:
+	black -l 79 .

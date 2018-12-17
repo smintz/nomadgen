@@ -13,9 +13,13 @@ def abort_if_false(ctx, param, value):
 
 
 @click.group()
-@click.option("--addr", default="http://127.0.0.1:4646", help="Address of nomad server")
+@click.option(
+    "--addr", default="http://127.0.0.1:4646", help="Address of nomad server"
+)
 @click.option("--region", help="Run in region")
-@click.option("--skip-verify", is_flag=True, default=True, help="Skip TLS verification")
+@click.option(
+    "--skip-verify", is_flag=True, default=True, help="Skip TLS verification"
+)
 @click.option("--cacert", type=click.Path(), help="Path of CA file")
 @click.option("--client-cert", type=click.Path())
 @click.option("--client-key", type=click.Path())
@@ -52,7 +56,9 @@ def diff():
 
 @click.command()
 @click.option("-f", "--force", is_flag=True, help="Just run.")
-@click.option("-w", "--wait", is_flag=True, help="Wait for the deploy to complete.")
+@click.option(
+    "-w", "--wait", is_flag=True, help="Wait for the deploy to complete."
+)
 @click.option(
     "-p",
     "--promote",

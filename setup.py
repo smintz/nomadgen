@@ -10,7 +10,8 @@ setup(
     author="Shahar Mintz",
     author_email="shahar.mintz309@gmail.com",
     url="https://github.com/smintz/nomadgen",
-    download_url="https://github.com/smintz/nomadgen/archive/" "%s.tar.gz" % VERSION,
+    download_url="https://github.com/smintz/nomadgen/archive/"
+    "%s.tar.gz" % VERSION,
     keywords=["nomad", "hcl", "hashicorp"],
     classifiers=[],
     requires=["requests", "thrift"],

@@ -22,7 +22,9 @@ class NGJob(Job):
 
     def setJobType(self, type):
         if type not in ["service", "system", "batch"]:
-            raise ValueError("type must be on of `service`, `system` or `batch`")
+            raise ValueError(
+                "type must be on of `service`, `system` or `batch`"
+            )
         self.Type = type
 
     def addTaskGroup(self, name="servers", workers=1, canaries=0):
@@ -97,6 +99,8 @@ class NGJob(Job):
 
     def distinctHosts(self, flag=True):
         self.addConstraint(
-            self.buildConstraint(operator="distinct_hosts", value=str(flag).lower())
+            self.buildConstraint(
+                operator="distinct_hosts", value=str(flag).lower()
+            )
         )
         return self

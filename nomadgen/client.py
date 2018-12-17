@@ -5,7 +5,12 @@ import click
 import six
 from time import sleep
 
-from nomadgen.helpers import validate_json_output, jobToJSON, fromJson, writeToJSON
+from nomadgen.helpers import (
+    validate_json_output,
+    jobToJSON,
+    fromJson,
+    writeToJSON,
+)
 
 from nomadgen.jobspec.ttypes import (
     JobAllocationsResponse,
@@ -77,12 +82,22 @@ class NomadgenAPI(object):
         validate_json_output(result.text, JobDeregisterResponse())
 
     def promote(self, deployment):
-        payload = DeploymentPromoteRequest(DeploymentID=deployment.ID, All=True)
-        self.post("/v1/deployment/promote/" + deployment.ID, data=writeToJSON(payload))
+        payload = DeploymentPromoteRequest(
+            DeploymentID=deployment.ID, All=True
+        )
+        self.post(
+            "/v1/deployment/promote/" + deployment.ID,
+            data=writeToJSON(payload),
+        )
 
     def eval(self):
-        payload = {"JobID": self.job.ID, "EvalOptions": {"ForceReschedule": True}}
-        result = self.post("/v1/job/" + self.job.ID + "/evaluate", data=payload)
+        payload = {
+            "JobID": self.job.ID,
+            "EvalOptions": {"ForceReschedule": True},
+        }
+        result = self.post(
+            "/v1/job/" + self.job.ID + "/evaluate", data=payload
+        )
         validate_json_output(result.text)
 
     def get_deployments(self, index=0):
@@ -98,7 +113,9 @@ class NomadgenAPI(object):
     def get_running_deployments(self, index=0):
         d = self.get_deployments(index)
         return [
-            deployment for deployment in d.Deployments if deployment.Status == "running"
+            deployment
+            for deployment in d.Deployments
+            if deployment.Status == "running"
         ]
 
     def wait(self, index=0, promote=False):
@@ -110,10 +127,14 @@ class NomadgenAPI(object):
                 ds
                 for tg, ds in six.iteritems(cd.TaskGroups)
                 if ds.DesiredCanaries > 0
-                and ds.DesiredCanaries == len(ds.PlacedCanaries) == ds.HealthyAllocs
+                and ds.DesiredCanaries
+                == len(ds.PlacedCanaries)
+                == ds.HealthyAllocs
             ]
 
-            logging.info("%d task groups awaiting promotion" % len(awaiting_promotion))
+            logging.info(
+                "%d task groups awaiting promotion" % len(awaiting_promotion)
+            )
             logging.debug(awaiting_promotion)
             if promote and len(awaiting_promotion) == len(cd.TaskGroups):
                 self.promote(cd)
