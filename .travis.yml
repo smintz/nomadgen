@@ -17,10 +17,10 @@ matrix:
       python: 3.6
       env: TOXENV=py36
     - os: osx
-      language: generic
+      python: 2.7
       env: TOXENV=py27
     - os: osx
-      language: generic
+      python: 3.7
       env: TOXENV=py37
 install:
 - pip install --upgrade pycodestyle
