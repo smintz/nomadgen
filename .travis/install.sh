@@ -15,6 +15,7 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
   sudo make install
   popd
 
+  brew update && brew upgrade pyenv
   pyenv install $PYTHON
   export PYENV_VERSION=$PYTHON
   pyenv global $PYTHON
